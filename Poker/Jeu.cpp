@@ -3,7 +3,7 @@
 Jeu::Jeu(int manche, int tour, int pot, int *idJoueur)
 {
 	manche_ = manche;
-	tour_ = tour;
+	couleur_ = tour;
 	pot_ = pot;
 	idJoueur_ = idJoueur;
 }
