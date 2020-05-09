@@ -10,3 +10,4 @@ void main() {
 	cout << "Bienvenue a PokerTSE"<<endl; //Message de bienvenue
 	cout << "Veuillez choisir votre role: client ou serveur" << endl; //choix serveur - client
 }
+

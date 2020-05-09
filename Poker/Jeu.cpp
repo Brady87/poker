@@ -3,9 +3,10 @@
 #include <algorithm>
 #include <random>
 #include <chrono>
+#include<list>
 using namespace std;
 
-Jeu::Jeu(int manche, int tour, int pot, Cartes* cartesTable, vector<Cartes> pioche, int* idJoueur)
+Jeu::Jeu(int manche, int tour, int pot, Cartes* cartesTable, vector<Cartes> pioche, int* idJoueur, Joueur* joueurs)
 {
 	manche_ = manche;
 	tour_ = tour;
@@ -13,6 +14,7 @@ Jeu::Jeu(int manche, int tour, int pot, Cartes* cartesTable, vector<Cartes> pioc
 	cartesTable_ = cartesTable;
 	pioche_ = pioche;
 	idJoueur_ = idJoueur;
+	joueurs_ = joueurs;
 }
 
 Jeu::~Jeu()
@@ -24,7 +26,7 @@ void Jeu::afficher_cartes_tables()
 {
 	cout << "Cartes sur la table : ";
 	if (tour_ == 1) { //1er tour : on affiche rien
-		
+		cout << endl;
 	}
 	else if (tour_ == 2) {//2e tour : on affiche les 3 premières cartes
 		for (int i = 0; i < 3; i++) {
@@ -64,8 +66,51 @@ void Jeu::melangerCartes()
 	shuffle(pioche_.begin(), pioche_.end(), std::default_random_engine(seed));//Mélange
 }
 
-void Jeu::gagnant()
+void Jeu::comparer(const int idJoueur)
 {
-	//On prend la main du joueur 1
-	joueurs_[0].get_main;
+	//On prend la main du joueur ayant idJoueur
+	Cartes* main1 = joueurs_[idJoueur].get_main();
+	Cartes* mainTable = cartesTable_;
+	//On sort les valeurs
+	int listeCouleur[7];
+	int listeSymbole[7];
+	for (int i = 0; i <2; i++){
+		listeCouleur[i] = main1[i].get_couleur();// Ajoute les couleurs de la main du joueur
+	}
+	for (int i = 0; i < 5; i++) {
+		listeCouleur[i+2]=mainTable[i].get_couleur();// Ajoute les couleurs de la table
+	}
+	for (int i = 0; i < 2; i++) {
+		listeCouleur[i]=main1[i].get_symbole();// Ajoute les couleurs de la main du joueur
+	}
+	for (int i = 0; i < 5; i++) {
+		listeCouleur[i+2]=mainTable[i].get_symbole();// Ajoute les couleurs de la table
+	}
+
+// Tri des listes
+		for (int i = 0; i < 6; i++) {
+			for (int j = i + 1; j < 6; j++) {
+				if (i > listeCouleur[j]) {
+					int c = listeCouleur[i];
+					listeCouleur[i] = listeCouleur[j];
+					listeCouleur[j] = c;
+				}
+			}
+		}
+
+		for (int i = 0; i < 6; i++) {
+			for (int j = i + 1; j < 6; j++) {
+				if (i > listeSymbole[j]) {
+					int c = listeSymbole[i];
+					listeSymbole[i] = listeSymbole[j];
+					listeSymbole[j] = c;
+				}
+			}
+		}
+
+	//test de "La quinte flush royale"
+		if (listeSymbole[6] == 14 ) {
+	}
 }
+
+

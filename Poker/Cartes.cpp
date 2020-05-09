@@ -16,7 +16,12 @@ Cartes::Cartes(int idCarte) {
 	else {
 		couleur_ = 4; //Pique
 	}
-	symbole_ = idCarte % 13 + 2;
+	if (idCarte % 13 == 0) {
+		symbole_ = 14;
+	}
+	else {
+		symbole_ = idCarte % 13 + 1;
+	}
 }
 
 void Cartes::afficher_cartes()
