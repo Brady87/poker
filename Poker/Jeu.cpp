@@ -1,4 +1,9 @@
 #include "Jeu.h"
+#include <vector>
+#include <algorithm>
+#include <random>
+#include <chrono>
+using namespace std;
 
 Jeu::Jeu(int manche, int tour, int pot, Cartes* cartesTable, vector<Cartes> pioche, int* idJoueur)
 {
@@ -43,7 +48,7 @@ void Jeu::afficher_cartes_tables()
 
 Cartes* Jeu::distribuerCartes(const int nbre)
 {
-	Cartes* cartesDistrib = new Cartes[nbre]; //initialisation du tableau à renvoyer
+	Cartes* cartesDistrib = new Cartes[nbre]; //Initialisation du tableau à renvoyer
 	for (int i = 0; i < nbre; i++) {
 		cartesDistrib[i] = pioche_.back; //Affectation du vecteur à la liste
 		pioche_.push_back; //Suppression de la carte du vecteur
@@ -53,4 +58,8 @@ Cartes* Jeu::distribuerCartes(const int nbre)
 
 void Jeu::melangerCartes()
 {
+	unsigned seed = chrono::system_clock::now()//Génération d'une graine pour shuffle
+		.time_since_epoch()
+		.count();
+	shuffle(pioche_.begin(), pioche_.end(), std::default_random_engine(seed));//Mélange
 }

@@ -1,10 +1,12 @@
 #include <iostream>
-#include <math.h>
+#include"Cartes.h"
+#include"Jeu.h"
+#include"Mainjoueur.h"
+#include"Joueur.h"
+
 using namespace std;
 
-int main() {
-	//Affichage de "Hello World"
-	cout << "Hello World !"<<endl;
-	int i = 0;
-	return 0;
+void main() {
+	cout << "Bienvenue a PokerTSE"<<endl; //Message de bienvenue
+	cout << "Veuillez choisir votre role: client ou serveur" << endl; //choix serveur - client
 }

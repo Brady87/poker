@@ -32,13 +32,13 @@ void Cartes::afficher_cartes()
 			symbole = 'V'; //Valet
 			break;
 		case 12:
-			symbole = 'D'; // Dame
+			symbole = 'D'; //Dame
 			break;
 		case 13:
-			symbole = 'R'; // Roi
+			symbole = 'R'; //Roi
 			break;
 		case 14:
-			symbole = 'A'; // As
+			symbole = 'A'; //As
 			break;
 		default:
 			symbole = '!'; //Non défini
