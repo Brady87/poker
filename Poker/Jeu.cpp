@@ -176,9 +176,9 @@ int* Jeu::combinaison(const int idJoueur)
 	//Test Suite
 	if (!trouve) {
 		for (int i = 0; i < 10; i++) {
-			if (tabSymbole[i] == 1 && tabSymbole[i + 1] == 1 && tabSymbole[i + 2] == 1 && tabSymbole[i + 3] == 1 && tabSymbole[i + 4] == 1) {
+			if (tabSymbole[i] >= 1 && tabSymbole[i + 1] >= 1 && tabSymbole[i + 2] >= 1 && tabSymbole[i + 3] >= 1 && tabSymbole[i + 4] >= 1) {
 				idCombinaison = 4;
-				idValeurCombinaison = i;
+				idValeurCombinaison = i+4;
 				trouve = true;
 			}
 		}
@@ -470,43 +470,43 @@ void Jeu::nomCombinaison(const int idJoueur)
 		cout << "Suite ";
 		switch (comb[1]) {
 		case 0:
-			cout << "de 2." << endl;
+			cout << "au 2." << endl;
 			break;
 		case 1:
-			cout << "de 3." << endl;
+			cout << "au 3." << endl;
 			break;
 		case 2:
-			cout << "de 4." << endl;
+			cout << "au 4." << endl;
 			break;
 		case 3:
-			cout << "de 5." << endl;
+			cout << "au 5." << endl;
 			break;
 		case 4:
-			cout << "de 6." << endl;
+			cout << "au 6." << endl;
 			break;
 		case 5:
-			cout << "de 7." << endl;
+			cout << "au 7." << endl;
 			break;
 		case 6:
-			cout << "de 8." << endl;
+			cout << "au 8." << endl;
 			break;
 		case 7:
-			cout << "de 9." << endl;
+			cout << "au 9." << endl;
 			break;
 		case 8:
-			cout << "de 10." << endl;
+			cout << "au 10." << endl;
 			break;
 		case 9:
-			cout << "de Valets." << endl;
+			cout << "au Valet." << endl;
 			break;
 		case 10:
-			cout << "de Dames." << endl;
+			cout << "a la Dame." << endl;
 			break;
 		case 11:
-			cout << "de Rois." << endl;
+			cout << "au Roi." << endl;
 			break;
 		case 12:
-			cout << "d'As." << endl;
+			cout << "a l'As." << endl;
 			break;
 		default:
 			cout << "Inconnu" << endl;
@@ -533,7 +533,6 @@ void Jeu::nomCombinaison(const int idJoueur)
 			break;
 		}
 		break;
-		//Plus haute carte à mettre
 	case 6:
 		cout << "Full ";
 		switch (comb[1]) {
