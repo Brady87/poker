@@ -2,9 +2,10 @@
 #include<iostream>
 using namespace std;
 
-Joueur::Joueur(int id, int jetons, bool distributeur)
+Joueur::Joueur(int id, string pseudo, int jetons, bool distributeur)
 {
 	id_ = id;
+	pseudo_ = pseudo;
 	jetons_ = jetons;
 	distributeur_ = distributeur;
 }
@@ -30,3 +31,5 @@ void Joueur::affciher_jetons()
 		cout << jetons_ << " jetons." << endl;
 	}
 }
+
+

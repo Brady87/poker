@@ -48,6 +48,11 @@ void Jeu::afficher_cartes_tables()
 	}
 }
 
+void Jeu::affichage()
+{
+
+}
+
 Cartes* Jeu::distribuerCartes(const int nbre)
 {
 	Cartes* cartesDistrib = new Cartes[nbre]; //Initialisation du tableau à renvoyer
@@ -103,7 +108,7 @@ int* Jeu::combinaison(const int idJoueur)
 	}
 
 
-	//Test Quinte flush royale
+	//Test Quinte Flush Royale
 	if (!trouve) {
 		for (int i = 0; i < 4; i++) {
 			if (tabId[51 - i * 13] == 1 && tabId[50 - i * 13] == 1 && tabId[49 - i * 13] == 1 && tabId[48 - i * 13] == 1 && tabId[47 - i * 13] == 1) {
@@ -114,7 +119,7 @@ int* Jeu::combinaison(const int idJoueur)
 		}
 	}
 
-	//Test Quinte flush 
+	//Test Quinte Flush 
 	if (!trouve) {
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 8; j++) {
@@ -127,7 +132,7 @@ int* Jeu::combinaison(const int idJoueur)
 		}
 	}
 
-	//Test Carrée
+	//Test Carré
 	if (!trouve) {
 		for (int i = 0; i < 13; i++) {
 			if (tabSymbole[i] >= 4) {
@@ -222,5 +227,556 @@ int* Jeu::combinaison(const int idJoueur)
 	combinaison[1] = idValeurCombinaison;
 	combinaison[2] = idValeurCombinaison1;
 	return combinaison;
+}
+
+void Jeu::nomCombinaison(const int idJoueur)
+{
+	int* comb = new int[3];
+	comb=combinaison(idJoueur);
+	switch (comb[0]) {
+	case 0:
+		cout << "Main haute ";
+		switch (comb[1]) {
+		case 0:
+			cout << "au 2." << endl;
+			break;
+		case 1:
+			cout << "au 3." << endl;
+			break;
+		case 2:
+			cout << "au 4." << endl;
+			break;
+		case 3:
+			cout << "au 5." << endl;
+			break;
+		case 4:
+			cout << "au 6." << endl;
+			break;
+		case 5:
+			cout << "au 7." << endl;
+			break;
+		case 6:
+			cout << "au 8." << endl;
+			break;
+		case 7:
+			cout << "au 9." << endl;
+			break;
+		case 8:
+			cout << "au 10." << endl;
+			break;
+		case 9:
+			cout << "au Valet." << endl;
+			break;
+		case 10:
+			cout << "a la Dame." << endl;
+			break;
+		case 11:
+			cout << "au Roi." << endl;
+			break;
+		case 12:
+			cout << "a l'As." << endl;
+			break;
+		default:
+			cout << "Inconnu" << endl;
+			break;
+		}
+		break;
+	case 1:
+		cout << "Paire ";
+		switch (comb[1]) {
+		case 0:
+			cout << "de 2." << endl;
+			break;
+		case 1:
+			cout << "de 3." << endl;
+			break;
+		case 2:
+			cout << "de 4." << endl;
+			break;
+		case 3:
+			cout << "de 5." << endl;
+			break;
+		case 4:
+			cout << "de 6." << endl;
+			break;
+		case 5:
+			cout << "de 7." << endl;
+			break;
+		case 6:
+			cout << "de 8." << endl;
+			break;
+		case 7:
+			cout << "de 9." << endl;
+			break;
+		case 8:
+			cout << "de 10." << endl;
+			break;
+		case 9:
+			cout << "de Valets." << endl;
+			break;
+		case 10:
+			cout << "de Dames." << endl;
+			break;
+		case 11:
+			cout << "de Rois." << endl;
+			break;
+		case 12:
+			cout << "d'As." << endl;
+			break;
+		default:
+			cout << "Inconnu" << endl;
+			break;
+		}
+		break;
+	case 2:
+		cout << "Double paire ";
+		switch (comb[1]) {
+		case 0:
+			cout << "de 2 et ";
+			break;
+		case 1:
+			cout << "de 3 et " ;
+			break;
+		case 2:
+			cout << "de 4 et ";
+			break;
+		case 3:
+			cout << "de 5 et " ;
+			break;
+		case 4:
+			cout << "de 6 et " ;
+			break;
+		case 5:
+			cout << "de 7 et " ;
+			break;
+		case 6:
+			cout << "de 8 et " ;
+			break;
+		case 7:
+			cout << "de 9 et " ;
+			break;
+		case 8:
+			cout << "de 10 et ";
+			break;
+		case 9:
+			cout << "de Valets et " ;
+			break;
+		case 10:
+			cout << "de Dames et " ;
+			break;
+		case 11:
+			cout << "de Rois et " ;
+			break;
+		case 12:
+			cout << "d'As et " ;
+			break;
+		default:
+			cout << "Inconnu" << endl;
+			break;
+		}
+		switch (comb[2]) {
+		case 0:
+			cout << "de 2." << endl;
+			break;
+		case 1:
+			cout << "de 3." << endl;
+			break;
+		case 2:
+			cout << "de 4." << endl;
+			break;
+		case 3:
+			cout << "de 5." << endl;
+			break;
+		case 4:
+			cout << "de 6." << endl;
+			break;
+		case 5:
+			cout << "de 7." << endl;
+			break;
+		case 6:
+			cout << "de 8." << endl;
+			break;
+		case 7:
+			cout << "de 9." << endl;
+			break;
+		case 8:
+			cout << "de 10." << endl;
+			break;
+		case 9:
+			cout << "de Valets." << endl;
+			break;
+		case 10:
+			cout << "de Dames." << endl;
+			break;
+		case 11:
+			cout << "de Rois." << endl;
+			break;
+		case 12:
+			cout << "d'As." << endl;
+			break;
+		default:
+			cout << "Inconnu" << endl;
+			break;
+		}
+		break;
+	case 3:
+		cout << "Brelan ";
+		switch (comb[1]) {
+		case 0:
+			cout << "de 2." << endl;
+			break;
+		case 1:
+			cout << "de 3." << endl;
+			break;
+		case 2:
+			cout << "de 4." << endl;
+			break;
+		case 3:
+			cout << "de 5." << endl;
+			break;
+		case 4:
+			cout << "de 6." << endl;
+			break;
+		case 5:
+			cout << "de 7." << endl;
+			break;
+		case 6:
+			cout << "de 8." << endl;
+			break;
+		case 7:
+			cout << "de 9." << endl;
+			break;
+		case 8:
+			cout << "de 10." << endl;
+			break;
+		case 9:
+			cout << "de Valets." << endl;
+			break;
+		case 10:
+			cout << "de Dames." << endl;
+			break;
+		case 11:
+			cout << "de Rois." << endl;
+			break;
+		case 12:
+			cout << "d'As." << endl;
+			break;
+		default:
+			cout << "Inconnu" << endl;
+			break;
+		}
+		break;
+	case 4:
+		cout << "Suite ";
+		switch (comb[1]) {
+		case 0:
+			cout << "de 2." << endl;
+			break;
+		case 1:
+			cout << "de 3." << endl;
+			break;
+		case 2:
+			cout << "de 4." << endl;
+			break;
+		case 3:
+			cout << "de 5." << endl;
+			break;
+		case 4:
+			cout << "de 6." << endl;
+			break;
+		case 5:
+			cout << "de 7." << endl;
+			break;
+		case 6:
+			cout << "de 8." << endl;
+			break;
+		case 7:
+			cout << "de 9." << endl;
+			break;
+		case 8:
+			cout << "de 10." << endl;
+			break;
+		case 9:
+			cout << "de Valets." << endl;
+			break;
+		case 10:
+			cout << "de Dames." << endl;
+			break;
+		case 11:
+			cout << "de Rois." << endl;
+			break;
+		case 12:
+			cout << "d'As." << endl;
+			break;
+		default:
+			cout << "Inconnu" << endl;
+			break;
+		}
+		break;
+	case 5:
+		cout << "Couleur ";
+		switch (comb[1]) {
+		case 0:
+			cout << "a coeur.";
+			break;
+		case 1:
+			cout << "a carreau.";
+			break;
+		case 2:
+			cout << "a trefle.";
+			break;
+		case 3:
+			cout << "a pique.";
+			break;
+		default:
+			cout << "Couleur inconnue";
+			break;
+		}
+		break;
+		//Plus haute carte à mettre
+	case 6:
+		cout << "Full ";
+		switch (comb[1]) {
+		case 0:
+			cout << "aux 2 " << endl;
+			break;
+		case 1:
+			cout << "aux 3 " << endl;
+			break;
+		case 2:
+			cout << "aux 4 " << endl;
+			break;
+		case 3:
+			cout << "aux 5 " << endl;
+			break;
+		case 4:
+			cout << "aux 6 " << endl;
+			break;
+		case 5:
+			cout << "aux 7 " << endl;
+			break;
+		case 6:
+			cout << "aux 8 " << endl;
+			break;
+		case 7:
+			cout << "aux 9 " << endl;
+			break;
+		case 8:
+			cout << "aux 10 " << endl;
+			break;
+		case 9:
+			cout << "aux Valets " << endl;
+			break;
+		case 10:
+			cout << "aux Dames " << endl;
+			break;
+		case 11:
+			cout << "aux Rois " << endl;
+			break;
+		case 12:
+			cout << "aux As " << endl;
+			break;
+		default:
+			cout << "Inconnu" << endl;
+			break;
+		}
+		break;
+		switch (comb[2]) {
+		case 0:
+			cout << "par les 2." << endl;
+			break;
+		case 1:
+			cout << "par les 3." << endl;
+			break;
+		case 2:
+			cout << "par les 4." << endl;
+			break;
+		case 3:
+			cout << "par les 5." << endl;
+			break;
+		case 4:
+			cout << "par les 6." << endl;
+			break;
+		case 5:
+			cout << "par les 7." << endl;
+			break;
+		case 6:
+			cout << "par les 8." << endl;
+			break;
+		case 7:
+			cout << "par les 9." << endl;
+			break;
+		case 8:
+			cout << "par les 10." << endl;
+			break;
+		case 9:
+			cout << "par les Valets." << endl;
+			break;
+		case 10:
+			cout << "par les Dames." << endl;
+			break;
+		case 11:
+			cout << "par les Rois." << endl;
+			break;
+		case 12:
+			cout << "par les As." << endl;
+			break;
+		default:
+			cout << "Inconnu" << endl;
+			break;
+		}
+	case 7:
+		cout << "Carré ";
+		switch (comb[1]) {
+		case 0:
+			cout << "de 2." << endl;
+			break;
+		case 1:
+			cout << "de 3." << endl;
+			break;
+		case 2:
+			cout << "de 4." << endl;
+			break;
+		case 3:
+			cout << "de 5." << endl;
+			break;
+		case 4:
+			cout << "de 6." << endl;
+			break;
+		case 5:
+			cout << "de 7." << endl;
+			break;
+		case 6:
+			cout << "de 8." << endl;
+			break;
+		case 7:
+			cout << "de 9." << endl;
+			break;
+		case 8:
+			cout << "de 10." << endl;
+			break;
+		case 9:
+			cout << "de Valets." << endl;
+			break;
+		case 10:
+			cout << "de Dames." << endl;
+			break;
+		case 11:
+			cout << "de Rois." << endl;
+			break;
+		case 12:
+			cout << "d'As." << endl;
+			break;
+		default:
+			cout << "Inconnu" << endl;
+			break;
+		}
+		break;
+	case 8:
+		cout << "Quinte flush ";
+		switch (comb[1]) {
+		case 0:
+			cout << "au 2." << endl;
+			break;
+		case 1:
+			cout << "au 3." << endl;
+			break;
+		case 2:
+			cout << "au 4." << endl;
+			break;
+		case 3:
+			cout << "au 5." << endl;
+			break;
+		case 4:
+			cout << "au 6." << endl;
+			break;
+		case 5:
+			cout << "au 7." << endl;
+			break;
+		case 6:
+			cout << "au 8." << endl;
+			break;
+		case 7:
+			cout << "au 9." << endl;
+			break;
+		case 8:
+			cout << "au 10." << endl;
+			break;
+		case 9:
+			cout << "au Valet." << endl;
+			break;
+		case 10:
+			cout << "a la Dame." << endl;
+			break;
+		case 11:
+			cout << "au Roi." << endl;
+			break;
+		case 12:
+			cout << "a l'As." << endl;
+			break;
+		default:
+			cout << "Inconnu" << endl;
+			break;
+		}
+		break;
+	case 9:
+		cout << "Quinte flush royale ";
+		switch (comb[1]) {
+		case 0:
+			cout << "a coeur.";
+			break;
+		case 1:
+			cout << "a carreau.";
+			break;
+		case 2:
+			cout << "a trefle.";
+			break;
+		case 3:
+			cout << "a pique.";
+			break;
+		default:
+			cout << "Couleur inconnue";
+			break;
+		}
+		break;
+	default:
+		cout << "Combinaison inconnue ";
+		break;
+	}
+	
+	
+}
+
+int Jeu::gagnant()
+{
+	//Renvoie l'id du gagnant, -1 en cas de match nul
+	if (combinaison(0)[0] > combinaison(1)[0]) {
+		return 0;
+	}
+	else if (combinaison(0)[0] < combinaison(1)[0]) {
+		return 1;
+	}
+	else if (combinaison(0)[0] == combinaison(1)[0] && combinaison(0)[0] == 9) {//Cas deux quintes flushs royales
+		return -1
+	}
+	else {
+		if (combinaison(0)[1] > combinaison(1)[1]) {
+			return 0;
+		}
+		else if (combinaison(0)[1] < combinaison(1)[1]) {
+			return 1;
+		}
+		else {
+			if (combinaison(0)[2] > combinaison(1)[2]) {
+				return 0;
+			}
+			else if (combinaison(0)[2] < combinaison(1)[2]) {
+				return 1;
+			}
+			else {
+				return -1;
+			}
+		}
+	}
 }
 
