@@ -4,45 +4,40 @@
 Cartes::Cartes(int idCarte) {
 	idCarte_ = idCarte;
 	//Gestion des couleurs
-	if (idCarte <= 13) {
-		couleur_ = 1; //Coeur
+	if (idCarte <= 12) {
+		couleur_ = 0; //Coeur
 	}
-	else if (idCarte>=14 && idCarte<=26) {
-		couleur_ = 2; //Carreau
+	else if (idCarte>=13 && idCarte<=25) {
+		couleur_ = 1; //Carreau
 	}
-	else if (idCarte >= 27 && idCarte <= 39) {
-		couleur_ = 3; //Trèfle
-	}
-	else {
-		couleur_ = 4; //Pique
-	}
-	if (idCarte % 13 == 0) {
-		symbole_ = 14;
+	else if (idCarte >= 26 && idCarte <= 38) {
+		couleur_ = 2; //Trèfle
 	}
 	else {
-		symbole_ = idCarte % 13 + 1;
+		couleur_ = 3; //Pique
 	}
+		symbole_ = idCarte % 13 ;
 }
 
 void Cartes::afficher_cartes()
 {
 	//Affichage des symboles
-	if (get_symbole() < 11) { //si le symbole est un nombre
+	if (get_symbole() < 9) { //si le symbole est un nombre
 		cout << get_symbole();
 	}
 	else {
 		char symbole;
 		switch(get_symbole()){ // sinon si c'est un as ou une figure
-		case 11:
+		case 9:
 			symbole = 'V'; //Valet
 			break;
-		case 12:
+		case 10:
 			symbole = 'D'; //Dame
 			break;
-		case 13:
+		case 11:
 			symbole = 'R'; //Roi
 			break;
-		case 14:
+		case 12:
 			symbole = 'A'; //As
 			break;
 		default:
@@ -54,16 +49,16 @@ void Cartes::afficher_cartes()
 	//Affichage des couleurs
 	switch (get_couleur())
 	{
-	case 1:
+	case 0:
 		cout <<"Co"; //Coeur
 		break;
-	case 2:
+	case 1:
 		cout << "Ca";//Carreau
 		break;
-	case 3:
+	case 2:
 		cout << "Tr"; //Trèfle
 		break;
-	case 4:
+	case 3:
 		cout << "Pi"; //Pique
 	default:
 		cout << "!"; //Non défini

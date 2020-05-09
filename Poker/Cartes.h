@@ -4,9 +4,9 @@ using namespace std;
 class Cartes
 {
 	    //Déclaration des attributs de la classe Cartes
-		int idCarte_; //1-13 Coeur | 14-26 Carreau | 27-39 Trèfle | 40-52 Pique
-		int couleur_; //1 Coeur | 2 Carreau | 3 Trèfle | 4 Pique
-		int symbole_; //2=2 ... 11=V 12=Re 13=Roi 14=As
+		int idCarte_; //0-12 Coeur | 13-25 Carreau | 26-38 Trèfle | 39-51 Pique
+		int couleur_; //0 Coeur | 1 Carreau | 2 Trèfle | 3 Pique
+		int symbole_; //0=2 ... 9=V 10=Re 11=Roi 12=As
 	public :
 		//Déclaration des méthodes de la classe Cartes
 		Cartes(int idCarte=0);  // Constructeur

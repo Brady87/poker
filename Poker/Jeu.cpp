@@ -68,49 +68,87 @@ void Jeu::melangerCartes()
 
 void Jeu::comparer(const int idJoueur)
 {
+	// 
+	int idCombinaison;// De 0 à 9
+	int idValeurCombinaison; // De 0 à 12
 	//On prend la main du joueur ayant idJoueur
 	Cartes* main1 = joueurs_[idJoueur].get_main();
 	Cartes* mainTable = cartesTable_;
 	//On sort les valeurs
-	int listeCouleur[7];
-	int listeSymbole[7];
-	for (int i = 0; i <2; i++){
-		listeCouleur[i] = main1[i].get_couleur();// Ajoute les couleurs de la main du joueur
+	int tabCouleur[4];
+	int tabSymbole[13];
+	int tabId[52];
+	for (int i = 0; i < 52; i++) { //on initialise le tableau à zéro
+		tabId[i] = 0;
 	}
-	for (int i = 0; i < 5; i++) {
-		listeCouleur[i+2]=mainTable[i].get_couleur();// Ajoute les couleurs de la table
+	for (int i = 0; i < 13; i++) { //on initialise le tableau à zéro
+		tabSymbole[i] = 0;
 	}
-	for (int i = 0; i < 2; i++) {
-		listeCouleur[i]=main1[i].get_symbole();// Ajoute les couleurs de la main du joueur
+	for (int i = 0; i < 4; i++) { //on initialise le tableau à zéro
+		tabCouleur[i] = 0;
 	}
-	for (int i = 0; i < 5; i++) {
-		listeCouleur[i+2]=mainTable[i].get_symbole();// Ajoute les couleurs de la table
+	
+	for (int i = 0; i <2; i++){//Parcours de la main du joueur
+		tabCouleur[main1[i].get_couleur()] ++;
+		tabSymbole[main1[i].get_symbole()] ++;
+		tabId[main1[i].get_idCarte()]++;//on incrémente chaque valeur
 	}
-
-// Tri des listes
-		for (int i = 0; i < 6; i++) {
-			for (int j = i + 1; j < 6; j++) {
-				if (i > listeCouleur[j]) {
-					int c = listeCouleur[i];
-					listeCouleur[i] = listeCouleur[j];
-					listeCouleur[j] = c;
+	for (int i = 0; i < 5; i++) {//Parcours des cartes de la table
+		tabCouleur[mainTable[i].get_couleur()] ++;
+		tabSymbole[mainTable[i].get_symbole()] ++;
+		tabId[mainTable[i].get_idCarte()]++;//on incrémente chaque valeur
+	}
+	//Test Quinte flush royale
+	for (int i = 0; i < 4; i++) {
+		if (tabId[51 - i*13] == 1 && tabId[50 - i*13] == 1 && tabId[49 - i * 13] == 1 && tabId[48 - i * 13] == 1 && tabId[47 - i * 13] == 1) {
+			idCombinaison = 9;
+			idValeurCombinaison = i; // Couleur inutile pour comparasion juste affichage
+		}
+	}
+	//Test Quinte flush 
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 8; j++) {
+			if (tabId[50 - j - i * 13] == 1 && tabId[49 - j - i * 13] == 1 && tabId[48 - j - i * 13] == 1 && tabId[47 - j - i * 13] == 1 && tabId[46 - j - i * 13] == 1) {
+				idCombinaison = 8;
+				idValeurCombinaison = 12 - j;
+			}
+		}
+	}
+	//Test Carrée
+	for (int i = 0; i < 13; i++) { 
+		if (tabSymbole[i]>=4 ) {
+			idCombinaison = 7;
+			idValeurCombinaison = i; 
+			}
+	}
+	//Test Full 
+	for (int i = 0; i < 13; i++) {
+		if (tabSymbole[i] >=3) {
+			for (int j = 0; j < 13; j++) {
+				if (j != i && tabSymbole[j] >= 2) {
+					idCombinaison = 6;
+					idValeurCombinaison = i; //!!! On ne prend pas en compte la valeur de la paire
 				}
 			}
 		}
-
-		for (int i = 0; i < 6; i++) {
-			for (int j = i + 1; j < 6; j++) {
-				if (i > listeSymbole[j]) {
-					int c = listeSymbole[i];
-					listeSymbole[i] = listeSymbole[j];
-					listeSymbole[j] = c;
-				}
-			}
-		}
-
-	//test de "La quinte flush royale"
-		if (listeSymbole[6] == 14 ) {
 	}
-}
+	//Test Couleur 
+	for (int i = 0; i < 10; i++) { 
+		if (tabSymbole[i] == 1 && tabSymbole[i +1] == 1 && tabSymbole[i + 2] == 1 && tabSymbole[i + 3] == 1 && tabSymbole[i + 4] == 1) {
+			idCombinaison = 5;
+			
+			}
+	}
+
+	//Test Suite
+
+	//Test Brelan
+	for (int i = 0; i < 13; i++) {
+		if (tabSymbole[i] >= 3) {
+				idCombinaison = 3;
+				idValeurCombinaison = i; 
+			}
+	}
+
 
 
