@@ -3,6 +3,7 @@
 #include<iostream>
 #include"Cartes.h"
 #include <vector>
+#include "Joueur.h"
 using namespace std;
 
 
@@ -16,7 +17,8 @@ class Jeu
 		int pot_;
 		Cartes* cartesTable_= new Cartes[5];
 		vector<Cartes> pioche_;
-		int *idJoueur_ = new int[2];
+		int* idJoueur = new int[2];
+		Joueur* joueurs_ = new Joueur[2];
 	public:
 		Jeu(int manche = 1, int tour = 1, int pot = 0, Cartes* cartesTable = nullptr, vector<Cartes> pioche = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52}, int* idJoueur = nullptr); //Déclaration du constructeur
 		~Jeu(); //Déclaration du destructeur
@@ -30,6 +32,7 @@ class Jeu
 		void afficher_cartes_tables();
 		Cartes* distribuerCartes(const int nbre); //distribue les cartes en les prenant dans la pioche
 		void melangerCartes(); //Mélange les cartes
+		void gagnant();
 
 
 };

@@ -63,3 +63,9 @@ void Jeu::melangerCartes()
 		.count();
 	shuffle(pioche_.begin(), pioche_.end(), std::default_random_engine(seed));//Mélange
 }
+
+void Jeu::gagnant()
+{
+	//On prend la main du joueur 1
+	joueurs_[0].get_main;
+}
