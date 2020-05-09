@@ -30,7 +30,7 @@ class Jeu
 		void afficher_cartes_tables();
 		Cartes* distribuerCartes(const int nbre); //distribue les cartes en les prenant dans la pioche
 		void melangerCartes(); //Mélange les cartes
-		void comparer(const int idJoueur);
+		int* combinaison(const int idJoueur);
 
 
 };

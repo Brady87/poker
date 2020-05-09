@@ -6,7 +6,7 @@ class Cartes
 	    //Déclaration des attributs de la classe Cartes
 		int idCarte_; //0-12 Coeur | 13-25 Carreau | 26-38 Trèfle | 39-51 Pique
 		int couleur_; //0 Coeur | 1 Carreau | 2 Trèfle | 3 Pique
-		int symbole_; //0=2 ... 9=V 10=Re 11=Roi 12=As
+		int symbole_; //0=>2 ... 9=>V 10=>Dame 11=>Roi 12=As
 	public :
 		//Déclaration des méthodes de la classe Cartes
 		Cartes(int idCarte=0);  // Constructeur
@@ -17,6 +17,5 @@ class Cartes
 		const int get_symbole() { return symbole_; };
 		void set_symbole(const int symbole) { symbole_ = symbole; }
 		void afficher_cartes();
-
 };
 
