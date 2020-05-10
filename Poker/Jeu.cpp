@@ -22,7 +22,7 @@ Jeu::~Jeu()
 	delete idJoueur_;
 }
 
-void Jeu::afficher_cartes_tables()
+const void Jeu::afficher_cartes_tables()
 {
 	cout << "Cartes sur la table : ";
 	if (tour_ == 1) { //1er tour : on affiche rien
@@ -48,7 +48,7 @@ void Jeu::afficher_cartes_tables()
 	}
 }
 
-void Jeu::affichage()
+const void Jeu::affichage()
 {
 
 }
@@ -229,7 +229,7 @@ int* Jeu::combinaison(const int idJoueur)
 	return combinaison;
 }
 
-void Jeu::nomCombinaison(const int idJoueur)
+const void Jeu::nomCombinaison(const int idJoueur)
 {
 	int* comb = new int[3];
 	comb=combinaison(idJoueur);
@@ -746,7 +746,7 @@ void Jeu::nomCombinaison(const int idJoueur)
 	
 }
 
-int Jeu::gagnant()
+const int Jeu::gagnant()
 {
 	//Renvoie l'id du gagnant, -1 en cas de match nul
 	if (combinaison(0)[0] > combinaison(1)[0]) {

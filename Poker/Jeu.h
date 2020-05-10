@@ -27,14 +27,14 @@ class Jeu
 		void set_tour(const int tour) { couleur_ = tour; } 
 		const int get_pot() { return pot_; };
 		void set_pot(const int pot) { pot_ = pot; }
-		void afficher_cartes_tables();
-		void affichage();
+		const void afficher_cartes_tables();
+		const void affichage() ;
 		void set_cartesTable(Cartes* cartesTable) { cartesTable_ = cartesTable; }
 		Cartes* distribuerCartes(const int nbre); //distribue les cartes en les prenant dans la pioche
 		void melangerCartes(); //Mélange les cartes
 		int* combinaison(const int idJoueur);
-		void nomCombinaison(const int idJoueur);
-		int gagnant();
+		const void nomCombinaison(const int idJoueur);
+		const int gagnant();
 
 };
 
