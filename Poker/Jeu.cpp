@@ -6,6 +6,7 @@
 #include<list>
 using namespace std;
 
+
 Jeu::Jeu(int manche, int tour, int pot, Cartes* cartesTable, vector<Cartes> pioche, int* idJoueur, Joueur* joueurs)
 {
 	manche_ = manche;
@@ -50,6 +51,72 @@ const void Jeu::afficher_cartes_tables()
 
 const void Jeu::affichage()
 {
+
+}
+
+int Jeu::choix(int choixPrec)
+{
+	Joueur vous, adversaire;
+	if (joueurs_[0].get_quiParle()) {
+		vous = joueurs_[0];
+		adversaire = joueurs_[1];
+	}
+	else {
+		vous = joueurs_[1];
+		adversaire = joueurs_[0];
+	}
+	int ch;
+	do
+	{
+		cout << "Veuillez rentrer votre choix " << endl;
+		cout << "1- Checker " << endl;
+		cout << "2- Miser/Relancer " << endl;
+		cout << "3- Suivre " << endl;
+		cout << "4- Se coucher " << endl;
+		cin >> ch;
+		switch (ch)
+		{
+		case 1:
+			if (!vous.get_distributeur())
+			{
+				cout <<"le joueur a choisi de checker" <<endl;
+
+			}
+		case 2:
+			int mise;
+			int jetons=vous.get_jetons();
+			cout << "Mise de combien ?" << endl;
+			cin >> mise;
+			if (jetons > mise) {
+				cout << "Mise supérieure a votre capital" << endl;
+			}
+			else if (mise < adversaire.get_mise()) {
+				cout << "Mise insuffisante" << "Vous devez misez au moins : " << adversaire.get_mise() << "." << endl;
+			}
+			else {
+				vous.set_jetons(vous.get_jetons() - mise); //On met à jour son nbre de jetons
+				vous.set_mise(mise-adversaire.get_mise()); 
+				set_pot(get_pot() + mise); // On met à jour le pot
+				if (joueurs_[0].get_quiParle()) {
+					vous.set_quiParle(!vous.get_quiParle());
+					adversaire.set_quiParle(!adversaire.get_quiParle());
+					joueurs_[0]= vous ;
+					joueurs_[1]=adversaire ;
+				}
+				else {
+					vous.set_quiParle(!vous.get_quiParle());
+					adversaire.set_quiParle(!adversaire.get_quiParle());
+					joueurs_[1]= vous ;
+					joueurs_[0]=adversaire ;
+				}
+				
+			}
+
+		default:
+				cout <<"Choix non valide, veuillez rentrer un choix valide" <<endl;
+				break;
+		}
+	} while (ch != 1 || ch != 2 || ch != 3 || ch != 4);
 
 }
 
@@ -756,7 +823,7 @@ const int Jeu::gagnant()
 		return 1;
 	}
 	else if (combinaison(0)[0] == combinaison(1)[0] && combinaison(0)[0] == 9) {//Cas deux quintes flushs royales
-		return -1
+		return -1;
 	}
 	else {
 		if (combinaison(0)[1] > combinaison(1)[1]) {

@@ -9,7 +9,21 @@ using namespace std;
 
 
 void main() {
-	cout << "Bienvenue a PokerTSE"<<endl; //Message de bienvenue
+	cout << "                                                                   " << endl;
+    cout << "                                                                   " << endl;
+    cout << "                                                                   " << endl;
+    cout << "     .:XHHHHk.              db.   .;;.     .:XHHHHk.               " << endl;
+    cout << "   oMMMMMMMMMMM       ~MM  dMMP :MMMMMR  oMMMMMMMMMMM              " << endl;
+    cout << "   QMMMMMb  \"MMX       MMMMMMP !MX' :M~ QMMMMMb  \"MMX            " << endl;
+    cout << "     `MMMM.  )M> :X!Hk. MMMM   XMM.o\"  . `MMMM.  )M>              " << endl;
+    cout << "      'MMMb.dM! XM M'?M MMMMMX.`MMMMMMMM~  'MMMb.dM!               " << endl;
+    cout << "       ~MMMMM~ XMM. .XM XM`\"MMMb.~*?**~ .   ~MMM~\"MMb            " << endl;
+    cout << "        ?MMM>  YMMMMMM! MM   `?MMRb.         ?MMM>  `?MRb.         " << endl;
+    cout << "         MMMX   \"MMMM\"  MM       ~%:          MMMX   `?MRb.      " << endl;
+    cout << "         'MMM.                                 'MMM.    `?MRb.     " << endl;
+    cout << "          ~M!M                                  ~M!M         ~%:   " << endl << endl;
+
+	cout << "------------------------Bienvenue a PokerTSE------------------------"<<endl; //Message de bienvenue
 	string pseudo;
 	int rep = -1;
 	Jeu jeu; //Initialisation du jeu
@@ -58,6 +72,7 @@ void main() {
 		cout << "Sur la table : ";
 		jeu.afficher_cartes_tables();
 		cout << "------------------------------" << endl;
+		if()
 	} while (jeu.get_tour < 4);
 }
 
