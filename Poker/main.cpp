@@ -3,7 +3,6 @@
 #include"Jeu.h"
 #include"Joueur.h"
 #include<time.h>
-
 using namespace std;
 
 
@@ -39,25 +38,43 @@ void main() {
 			cout << "Erreur de saisie !" << endl;
 		}
 	} while (rep != 0 || rep != 1);
-	vous.set_id(rep);
-	//CONNEXION A L'AUTRE JOUEUR A COMPLETER
-	Joueur adversaire(1-rep,"Inconnu");//INFO A RECUPERER
-	srand(time(NULL)); // Initialisation de rand
-	int aleat = rand() % 2;
-	if (aleat == vous.get_id()) {
-		cout << "Vous etes le distributeur." << endl;
-		vous.set_distributeur = true;
-		adversaire.set_distributeur = false;
+	vous.set_id(rep); // Client ou serveur
+	jeu.set_joueurs(vous);// affectation des joueurs au jeu*
+	ofstream maSauvegarde;
+	if (rep == 0)
+	{
+		ofstream maSauvegarde("client.txt");
 	}
 	else {
-		cout << "Votre adversaire distribue les cartes." << endl;
-		vous.set_distributeur = false;
-		adversaire.set_distributeur = true;
+		ofstream maSauvegarde("serveur.txt");
 	}
-	//Distribution des cartes
-	vous.set_main(jeu.distribuerCartes(2));
-	adversaire.set_main(jeu.distribuerCartes(2));
-	jeu.set_cartesTable(jeu.distribuerCartes(5));
+	jeu.sauver_joueur(rep, maSauvegarde);
+	//CONNEXION A L'AUTRE JOUEUR A COMPLETER
+	Joueur adversaire(1-rep,"Inconnu");
+	//INFO A RECUPERER
+	jeu.set_joueurs(adversaire);
+	if (rep == 1) {// Si serveur on fait les tirages
+		srand(time(NULL)); // Initialisation de rand
+		int aleat = rand() % 2;
+		if (aleat == vous.get_id()) {
+			cout << "Vous etes le distributeur." << endl;
+			vous.set_distributeur = true;
+			adversaire.set_distributeur = false;
+		}
+		else {
+			cout << "Votre adversaire distribue les cartes." << endl;
+			vous.set_distributeur = false;
+			adversaire.set_distributeur = true;
+		}
+		//Distribution des cartes
+		vous.set_main(jeu.distribuerCartes(2));
+		adversaire.set_main(jeu.distribuerCartes(2));
+		jeu.set_cartesTable(jeu.distribuerCartes(5));
+		//!!\\Penser à sauvegarder les joueurs
+	}
+	else {
+
+	}
 	do {
 		cout << "Manche " << jeu.get_manche() << endl;
 		cout << "Tour " << jeu.get_tour() << endl;
@@ -72,7 +89,7 @@ void main() {
 		cout << "Sur la table : ";
 		jeu.afficher_cartes_tables();
 		cout << "------------------------------" << endl;
-		if()
+		jeu.choix(rep);
 	} while (jeu.get_tour < 4);
 }
 

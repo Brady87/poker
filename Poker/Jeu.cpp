@@ -4,6 +4,7 @@
 #include <random>
 #include <chrono>
 #include<list>
+#include <fstream>
 using namespace std;
 
 
@@ -54,10 +55,11 @@ const void Jeu::affichage()
 
 }
 
-int Jeu::choix(int choixPrec)
+int Jeu::choix(int rep)
 {
+
 	Joueur vous, adversaire;
-	if (joueurs_[0].get_quiParle()) {
+	if (rep==0) {
 		vous = joueurs_[0];
 		adversaire = joueurs_[1];
 	}
@@ -80,14 +82,13 @@ int Jeu::choix(int choixPrec)
 			if (!vous.get_distributeur())
 			{
 				cout <<"le joueur a choisi de checker" <<endl;
-
 			}
+			break;
 		case 2:
 			int mise;
-			int jetons=vous.get_jetons();
 			cout << "Mise de combien ?" << endl;
 			cin >> mise;
-			if (jetons > mise) {
+			if (vous.get_jetons() < mise) {
 				cout << "Mise supérieure a votre capital" << endl;
 			}
 			else if (mise < adversaire.get_mise()) {
@@ -97,27 +98,28 @@ int Jeu::choix(int choixPrec)
 				vous.set_jetons(vous.get_jetons() - mise); //On met à jour son nbre de jetons
 				vous.set_mise(mise-adversaire.get_mise()); 
 				set_pot(get_pot() + mise); // On met à jour le pot
-				if (joueurs_[0].get_quiParle()) {
-					vous.set_quiParle(!vous.get_quiParle());
-					adversaire.set_quiParle(!adversaire.get_quiParle());
-					joueurs_[0]= vous ;
-					joueurs_[1]=adversaire ;
-				}
-				else {
-					vous.set_quiParle(!vous.get_quiParle());
-					adversaire.set_quiParle(!adversaire.get_quiParle());
-					joueurs_[1]= vous ;
-					joueurs_[0]=adversaire ;
-				}
-				
+			break;
+			case 4:
+				cout <<"Vous vous couchez." <<endl;
+				adversaire.set_jetons(adversaire.get_jetons() + get_pot());
+				break;
 			}
 
 		default:
 				cout <<"Choix non valide, veuillez rentrer un choix valide" <<endl;
 				break;
 		}
-	} while (ch != 1 || ch != 2 || ch != 3 || ch != 4);
 
+	} while (ch != 1 || ch != 2 || ch != 3 || ch != 4);
+	//Réaffectation variables
+	if (rep == 0) {
+		joueurs_[0] =vous ;
+		joueurs_[1] = adversaire;
+	}
+	else {
+		joueurs_[1] = vous;
+		joueurs_[0] = adversaire ; 
+	}
 }
 
 Cartes* Jeu::distribuerCartes(const int nbre)
@@ -845,4 +847,58 @@ const int Jeu::gagnant()
 		}
 	}
 }
+
+void Jeu::sauver_jeu(ofstream &flux)
+{
+	//Recopie dans le fichier texte
+	if (!flux.is_open()) {
+		cout << "Erreur d'ouverture" << endl;
+	}
+	else
+	{
+		flux << "Manche :" <<get_manche() << endl; // Ecriture de la manche
+		flux << "Tour :" << get_tour() << endl; // Ecriture du tour
+		flux << "Phase :" << get_phase() << endl; // Ecriture de la phase
+		flux << "Pot :" << get_pot() << endl; // Ecriture des éléments
+		for (int i = 0; i < 5; i++) {
+			flux <<"Cartes "<<i<<" :"<< cartesTable_[i].get_idCarte() << endl; // Ecriture des cartes du jeu
+		}
+					
+		}
+		if (!flux.good()) {
+			cout << "Erreur d'ecriture" << endl;
+		}
+		else {
+			cout << "Sauvegarde effectuee avec succes" << endl;
+		}
+		flux.close();
+	}
+void Jeu::sauver_joueur(const int id,ofstream &flux)
+{
+	//Recopie dans le fichier texte
+	if (!flux.is_open()) {
+		cout << "Erreur d'ouverture" << endl;
+	}
+	else
+	{
+		flux << "Phase :" << get_phase() << endl;
+		flux << "Pseudo :" << joueurs_[id].get_pseudo() << endl; // Ecriture du pseudo
+		flux << "Jetons :" << joueurs_[id].get_jetons() << endl; // Ecriture du nbre jetons
+		flux << "Distributeur: " << joueurs_[id].get_distributeur() << endl;
+		flux << "Qui parle :" << joueurs_[id].get_quiParle() << endl;
+		flux << "Mise :" << joueurs_[id].get_mise() << endl; // Ecriture des éléments
+		for (int i = 0; i < 2; i++) {
+			flux <<"Cartes "<<i<<" :"<< joueurs_[id].get_main[i].get_idCarte() << endl; // Ecriture des cartes du jeu
+		}
+					
+		}
+		if (!flux.good()) {
+			cout << "Erreur d'ecriture" << endl;
+		}
+		else {
+			cout << "Sauvegarde effectuee avec succes" << endl;
+		}
+		flux.close();
+	}
+
 

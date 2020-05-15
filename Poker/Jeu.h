@@ -4,6 +4,7 @@
 #include"Cartes.h"
 #include <vector>
 #include "Joueur.h"
+#include<fstream>
 using namespace std;
 
 class Jeu
@@ -11,6 +12,7 @@ class Jeu
 		//Déclaration des attributs de la classe Jeu
 		int manche_;
 		int tour_;
+		int phase_;
 		int couleur_;
 		int pot_;
 		Cartes* cartesTable_= new Cartes[5];
@@ -27,15 +29,19 @@ class Jeu
 		void set_tour(const int tour) { couleur_ = tour; } 
 		const int get_pot() { return pot_; };
 		void set_pot(const int pot) { pot_ = pot; }
+		const int get_phase() { return phase_; };
+		void set_phase(const int phase) { phase_ = phase; }
 		const void afficher_cartes_tables();
 		const void affichage() ;
-		int choix(int choixPrec);
+		void set_joueurs(Joueur joueur) { joueurs_[joueur.get_id()] = joueur; }
+		int choix(int rep);
 		void set_cartesTable(Cartes* cartesTable) { cartesTable_ = cartesTable; }
 		Cartes* distribuerCartes(const int nbre); //distribue les cartes en les prenant dans la pioche
 		void melangerCartes(); //Mélange les cartes
 		int* combinaison(const int idJoueur);
 		const void nomCombinaison(const int idJoueur);
 		const int gagnant();
-
+		void sauver_jeu(ofstream &flux);
+		void sauver_joueur(const int id, ofstream &flux);
 };
 

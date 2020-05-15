@@ -8,7 +8,7 @@ Joueur::Joueur(int id, string pseudo, int jetons, bool distributeur,bool quiParl
 	pseudo_ = pseudo;
 	jetons_ = jetons;
 	distributeur_ = distributeur;
-	quiParle_ = qui parle;
+	//quiParle_ = quiparle;
 	mise_ = mise;
 }
 

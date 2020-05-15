@@ -1,6 +1,7 @@
 #pragma once
 #include<string>
 #include"Cartes.h"
+#include<fstream>
 using namespace std;
 
 class Joueur
@@ -33,5 +34,5 @@ class Joueur
 		void set_pseudo(string pseudo) { pseudo_ = pseudo; }
 		void afficher_cartes_joueur(); //Méthode afficher les cartes du joueur
 		void affciher_jetons(); //Méthode afficher les jetons du joueur
-
+		
 };
