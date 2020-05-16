@@ -13,10 +13,11 @@ class Joueur
 		bool distributeur_ ;
 		bool quiParle_;
 		int mise_;
+		int choix_;
 		Cartes* main_= new Cartes [2];
 	public :
 		//Déclaration des méthodes de la classe joueur 
-		Joueur(int id=0,string pseudo="Inconnu", int jetons = 1000 , bool distributeur=false); //Déclaration du constructeur
+		Joueur(int id = -1, string pseudo = "Inconnu", int jetons = 1000, bool distributeur = false, bool quiParle = false, int mise = 0, int choix_=0); //Déclaration du constructeur
 		~Joueur();//Déclaration du destructeur
 		const int get_id() const {return id_;} 
 		void set_id(const int id) {id_ = id; }
@@ -32,7 +33,10 @@ class Joueur
 		const int get_mise() const { return mise_; }
 		string get_pseudo() { return pseudo_; }
 		void set_pseudo(string pseudo) { pseudo_ = pseudo; }
+		const int get_choix() const { return choix_; }
+		void set_choix(const int choix) { choix_ = choix; }
 		void afficher_cartes_joueur(); //Méthode afficher les cartes du joueur
 		void affciher_jetons(); //Méthode afficher les jetons du joueur
-		
+		void sauver_joueur(ofstream &flux);
+		void lire_joueur(ifstream& flux);
 };

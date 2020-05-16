@@ -1,7 +1,7 @@
 #include "Cartes.h"
 
 
-Cartes::Cartes(int idCarte) {
+Cartes::Cartes(const int idCarte) {
 	idCarte_ = idCarte;
 	//Gestion des couleurs
 	if (idCarte <= 12) {
@@ -18,6 +18,26 @@ Cartes::Cartes(int idCarte) {
 	}
 		symbole_ = idCarte % 13 ;
 }
+
+void Cartes::set_idCarte(const int idCarte)
+{
+	idCarte_ = idCarte;
+	//Gestion des couleurs
+	if (idCarte <= 12) {
+		couleur_ = 0; //Coeur
+	}
+	else if (idCarte >= 13 && idCarte <= 25) {
+		couleur_ = 1; //Carreau
+	}
+	else if (idCarte >= 26 && idCarte <= 38) {
+		couleur_ = 2; //Trèfle
+	}
+	else {
+		couleur_ = 3; //Pique
+	}
+	symbole_ = idCarte % 13;
+}
+
 
 void Cartes::afficher_cartes()
 {

@@ -37,59 +37,82 @@ void main() {
 		if (rep != 0 && rep != 1 ) {
 			cout << "Erreur de saisie !" << endl;
 		}
-	} while (rep != 0 || rep != 1);
+	} while (rep != 0 && rep != 1);
 	vous.set_id(rep); // Client ou serveur
-	jeu.set_joueurs(vous);// affectation des joueurs au jeu*
-	ofstream maSauvegarde;
-	if (rep == 0)
+	string monfichier, fichieradv;
+	if (rep == 0) //On définit dans quel fichier on va lire/écrire
 	{
-		ofstream maSauvegarde("client.txt");
+		monfichier = "client.txt";
+		fichieradv = "serveur.txt";
 	}
 	else {
-		ofstream maSauvegarde("serveur.txt");
+		monfichier = "serveur.txt";
+		fichieradv = "client.txt";
 	}
-	jeu.sauver_joueur(rep, maSauvegarde);
-	//CONNEXION A L'AUTRE JOUEUR A COMPLETER
-	Joueur adversaire(1-rep,"Inconnu");
-	//INFO A RECUPERER
+	ofstream maSauvegarde(monfichier);
+	ifstream lectAdv(fichieradv);
+	ifstream maLecture(monfichier);
+	ofstream sauvegardeJeu("jeu.txt");
+	ifstream lectJeu("jeu.txt");
+	Joueur adversaire;
+	vous.sauver_joueur(maSauvegarde); // On stocke nos infos
+	while (adversaire.get_id() != 1-rep) { //Tant que le joueur n'a pas choisi l'option adéquate
+		adversaire.lire_joueur(lectAdv); //On récupère les infos liées à l'adversaire
+		vous.sauver_joueur(maSauvegarde); // On stocke nos infos
+		cout << "En attente de votre adversaire ..." << endl;
+	}
+	ofstream sauvegardeAdv(fichieradv); // On place le flux sauv adv ici pour éviter la perte de données
+	jeu.set_joueurs(vous); // affectation des joueurs au jeu
 	jeu.set_joueurs(adversaire);
-	if (rep == 1) {// Si serveur on fait les tirages
+	if (rep == 1) {// Si serveur on fait les tirages 
 		srand(time(NULL)); // Initialisation de rand
 		int aleat = rand() % 2;
 		if (aleat == vous.get_id()) {
 			cout << "Vous etes le distributeur." << endl;
-			vous.set_distributeur = true;
-			adversaire.set_distributeur = false;
+			vous.set_distributeur(true);
+			adversaire.set_distributeur(false);
+			vous.set_quiParle(false);//Vous ne jouez pas en 1er
+			adversaire.set_quiParle(true);
 		}
 		else {
 			cout << "Votre adversaire distribue les cartes." << endl;
-			vous.set_distributeur = false;
-			adversaire.set_distributeur = true;
+			vous.set_distributeur(false);
+			adversaire.set_distributeur(true);
+			vous.set_quiParle(true);//Vous jouez en premier
+			adversaire.set_quiParle(false);
 		}
-		//Distribution des cartes
+		//Mélange et distribution des cartes
+
+		jeu.melangerCartes(); 
 		vous.set_main(jeu.distribuerCartes(2));
 		adversaire.set_main(jeu.distribuerCartes(2));
 		jeu.set_cartesTable(jeu.distribuerCartes(5));
-		//!!\\Penser à sauvegarder les joueurs
+		//On sauvegarde une nouvelle fois les joueurs et le jeu
+		vous.sauver_joueur(maSauvegarde);
+		adversaire.sauver_joueur(sauvegardeAdv);
+		jeu.sauver_jeu(sauvegardeJeu);
 	}
-	else {
-
+	else {//On récupère les infos venant du serveur
+		while(!vous.get_quiParle() && !adversaire.get_quiParle())// Tant qu'on ne sait pas qui commence
+		vous.lire_joueur(maLecture); //On actualise les profils
+		adversaire.lire_joueur(lectAdv);
 	}
 	do {
-		cout << "Manche " << jeu.get_manche() << endl;
-		cout << "Tour " << jeu.get_tour() << endl;
-		cout << "------------------------------" << endl;
-		cout << "Vous : ";
-		vous.affciher_jetons();
-		cout << "Adversaire : ";
-		adversaire.affciher_jetons();
-		cout << "Pot : " << jeu.get_pot << " jetons." << endl;
-		cout << "Votre main : ";
-		vous.afficher_cartes_joueur();
-		cout << "Sur la table : ";
-		jeu.afficher_cartes_tables();
-		cout << "------------------------------" << endl;
-		jeu.choix(rep);
-	} while (jeu.get_tour < 4);
+		while (!vous.get_quiParle()) {//Ce n'est pas à vous de parler
+			vous.lire_joueur(maLecture); // On récupère les infos
+			adversaire.lire_joueur(lectAdv);
+			jeu.lire_jeu(lectJeu);
+		}
+		do {
+			jeu.affichage(rep); //Affiche les différentes caractéristique du jeu en cours
+			jeu.choix(rep); //Choix du joueur
+			vous.set_quiParle(!vous.get_quiParle());//On a fini de parler
+			adversaire.set_quiParle(!adversaire.get_quiParle());// On notifie que ça va être au tour de l'adversaire
+		} while (vous.get_choix() != 4 && adversaire.get_choix() != 4);// Tant que personne n'est couché
+		jeu.set_tour(jeu.get_tour() + 1);
+		vous.sauver_joueur(maSauvegarde);// On met à jour les joueurs
+		adversaire.sauver_joueur(sauvegardeAdv);
+		jeu.sauver_jeu(sauvegardeJeu);//On met à jour le jeu
+	} while (jeu.get_tour() < 4 && vous.get_choix() != 4 && adversaire.get_choix() != 4); //Tant que personne n'est couché et qu'il reste des tours
 }
 

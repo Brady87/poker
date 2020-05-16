@@ -9,13 +9,11 @@ class Cartes
 		int symbole_; //0=>2 ... 9=>V 10=>Dame 11=>Roi 12=As
 	public :
 		//Déclaration des méthodes de la classe Cartes
-		Cartes(int idCarte=0);  // Constructeur
+		Cartes(const int idCarte=0);  // Constructeur
 		const int get_idCarte() { return idCarte_; }
-		void set_idCarte(const int idCarte) { idCarte_ = idCarte; }
+		void set_idCarte(const int idCarte);
 		const int get_couleur() { return couleur_; }
-		void set_couleur(const int couleur) { couleur_ = couleur; }
 		const int get_symbole() { return symbole_; };
-		void set_symbole(const int symbole) { symbole_ = symbole; }
 		void afficher_cartes();
 };
 
