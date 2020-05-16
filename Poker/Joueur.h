@@ -18,7 +18,7 @@ class Joueur
 	public :
 		//Déclaration des méthodes de la classe joueur 
 		Joueur(int id = -1, string pseudo = "Inconnu", int jetons = 1000, bool distributeur = false, bool quiParle = false, int mise = 0, int choix_=0); //Déclaration du constructeur
-		~Joueur();//Déclaration du destructeur
+		//~Joueur();//Déclaration du destructeur
 		const int get_id() const {return id_;} 
 		void set_id(const int id) {id_ = id; }
 		const int get_jetons() const {return jetons_;}
@@ -37,6 +37,8 @@ class Joueur
 		void set_choix(const int choix) { choix_ = choix; }
 		void afficher_cartes_joueur(); //Méthode afficher les cartes du joueur
 		void affciher_jetons(); //Méthode afficher les jetons du joueur
+		void afficher_choix(); // Affiche le choix effectué;
+		void afficher();//Afficher infos
 		void sauver_joueur(ofstream &flux);
 		void lire_joueur(ifstream& flux);
 };

@@ -54,15 +54,20 @@ const void Jeu::afficher_cartes_tables()
 	}
 }
 
-const void Jeu::affichage(const int rep)
+const void Jeu::affichage(int rep)
 {
 	cout << "Manche " << manche_ << endl;
 	cout << "Tour " << tour_ << endl;
 	cout << "------------------------------" << endl;
 	cout << "Vous : ";
 	joueurs_[rep].affciher_jetons();
+	cout << "Votre mise : " << joueurs_[rep].get_mise() << endl;
+	cout << endl;
 	cout << "Adversaire : ";
-	joueurs_[rep-1].affciher_jetons();
+	joueurs_[rep - 1].afficher_choix();
+	cout << "Mise adverse : " << joueurs_[rep-1].get_mise() << endl;
+	joueurs_[rep - 1].affciher_jetons();
+	cout << endl;
 	cout << "Pot : " << pot_ << " jetons." << endl;
 	cout << "Votre main : ";
 	joueurs_[rep].afficher_cartes_joueur();
@@ -71,20 +76,18 @@ const void Jeu::affichage(const int rep)
 	cout << "------------------------------" << endl;
 }
 
+void Jeu::set_joueurs(Joueur joueur)
+{
+	const int id = joueur.get_id();
+	joueurs_[id] = joueur;
+}
+
 
 void Jeu::choix(int rep)
 {
 
-	Joueur vous, adversaire;
-	if (rep==0) {
-		vous = joueurs_[0];
-		adversaire = joueurs_[1];
-	}
-	else {
-		vous = joueurs_[1];
-		adversaire = joueurs_[0];
-	}
 	int ch;
+	bool valide = false; //Vérifie que le choix effectué est valide
 	do
 	{
 		cout << "Veuillez rentrer votre choix " << endl;
@@ -96,29 +99,51 @@ void Jeu::choix(int rep)
 		switch (ch)
 		{
 		case 1:
-			if (!vous.get_distributeur())
+			if (!joueurs_[rep].get_distributeur())
 			{
-				cout <<"le joueur a choisi de checker" <<endl;
+				cout <<"Vous checkez" <<endl;
+				valide = true;
+			}
+			else {
+				cout << "Vous ne pouvez pas checkez." << endl;
 			}
 			break;
 		case 2:
 			int mise;
-			cout << "Mise de combien ?" << endl;
-			cin >> mise;
-			if (vous.get_jetons() < mise) {
-				cout << "Mise supérieure a votre capital" << endl;
-			}
-			else if (mise < adversaire.get_mise()) {
-				cout << "Mise insuffisante" << "Vous devez misez au moins : " << adversaire.get_mise() << "." << endl;
+			if (joueurs_[rep].get_mise() == 0) {
+				cout << "Mise de combien ?" << endl;
 			}
 			else {
-				vous.set_jetons(vous.get_jetons() - mise); //On met à jour son nbre de jetons
-				vous.set_mise(mise-adversaire.get_mise()); 
+				cout << "Remisez de combien ?" << endl;
+			}
+			cin >> mise;
+			if (joueurs_[rep].get_jetons() < mise) {
+				cout << "Mise supérieure a votre capital" << endl;
+			}
+			else if (mise+ joueurs_[rep].get_mise() < joueurs_[rep - 1].get_mise()) {
+				cout << "Mise insuffisante : vous devez miser au moins : " << joueurs_[rep - 1].get_mise()- joueurs_[rep].get_mise() << "." << endl;
+			}
+			else {
+				joueurs_[rep].set_jetons(joueurs_[rep].get_jetons() - mise); //On met à jour son nbre de jetons
+				joueurs_[rep].set_mise(joueurs_[rep].get_mise() + mise); // Mise total durant ce tour
 				set_pot(get_pot() + mise); // On met à jour le pot
+				valide = true;
+			break;
+		case 3:
+			if (joueurs_[rep].get_mise()+ joueurs_[rep].get_jetons() < joueurs_[rep - 1].get_mise()) {
+				cout << "Vous ne pouvez pas suivre." << endl; //CAS TAPIS
+			}
+			else {
+				joueurs_[rep].set_jetons(joueurs_[rep].get_jetons() - (joueurs_[rep - 1].get_mise() - joueurs_[rep].get_mise()));
+				cout << "Vous vous alignez en misant " << joueurs_[rep - 1].get_mise() - joueurs_[rep].get_mise() << endl;
+				joueurs_[rep].set_mise(joueurs_[rep-1].get_mise());
+				valide = true;
+			}
 			break;
 			case 4:
 				cout <<"Vous vous couchez." <<endl;
-				adversaire.set_jetons(adversaire.get_jetons() + get_pot());
+				joueurs_[rep - 1].set_jetons(joueurs_[rep - 1].get_jetons() + get_pot());
+				valide = true;
 				break;
 			}
 
@@ -127,17 +152,8 @@ void Jeu::choix(int rep)
 				break;
 		}
 
-	} while (ch != 1 && ch != 2 && ch != 3 && ch != 4);
-	vous.set_choix(ch); // On affecte le choix
-	//Réaffectation variables
-	if (rep == 0) {
-		joueurs_[0] =vous ;
-		joueurs_[1] = adversaire;
-	}
-	else {
-		joueurs_[1] = vous;
-		joueurs_[0] = adversaire ; 
-	}
+	} while (!valide);
+	joueurs_[rep].set_choix(ch); // On affecte le choix
 
 }
 
@@ -291,7 +307,7 @@ int* Jeu::combinaison(const int idJoueur)
 				idValeurCombinaison = i; //Prend automatiquement la paire la plus haute
 				trouve = true;
 				for (int j = 0; j < 13; j++) {
-					if (j != i, tabSymbole[j] >= 2) {
+					if (j != i && tabSymbole[j] >= 2) {
 						idCombinaison = 2; //C'est une double paire
 						idValeurCombinaison1 = j;
 					}
@@ -894,7 +910,6 @@ void Jeu::sauver_jeu(ofstream &flux)
 	}
 void Jeu::sauver_joueur(const int id,ofstream &flux)
 {
-	flux << get_phase() << endl;//Ecriture de la phase
 	joueurs_[id].sauver_joueur(flux);
 }
 
@@ -902,6 +917,7 @@ void Jeu::lire_jeu(ifstream& flux)
 {
 	if (!flux.is_open()) {
 		cout << "Erreur d'ouverture" << endl;
+		system("cls");
 	}
 	else{
 		int id0 ,id1, id2, id3, id4;
@@ -919,20 +935,21 @@ void Jeu::lire_jeu(ifstream& flux)
 		cartesTable_[2].set_idCarte(id2);
 		cartesTable_[3].set_idCarte(id3);
 		cartesTable_[4].set_idCarte(id4);
-		if (!flux.good()) {
+		/*if (!flux.good()) {
 			cout << "Erreur de lecture" << endl;
 		}
 		else {
 			cout << "Lecture terminée" << endl;
+		}*/
 		}
-		}
+	flux.close();
 
 }
 
 void Jeu::lire_joueur(const int id, ifstream& flux)
 {
-	flux >> phase_;
 	joueurs_[id].lire_joueur(flux);
+
 }
 
 

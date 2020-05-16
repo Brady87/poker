@@ -1,4 +1,4 @@
-#include "Cartes.h"
+ï»¿#include "Cartes.h"
 
 
 Cartes::Cartes(const int idCarte) {
@@ -11,7 +11,7 @@ Cartes::Cartes(const int idCarte) {
 		couleur_ = 1; //Carreau
 	}
 	else if (idCarte >= 26 && idCarte <= 38) {
-		couleur_ = 2; //Trèfle
+		couleur_ = 2; //TrÃ¨fle
 	}
 	else {
 		couleur_ = 3; //Pique
@@ -30,7 +30,7 @@ void Cartes::set_idCarte(const int idCarte)
 		couleur_ = 1; //Carreau
 	}
 	else if (idCarte >= 26 && idCarte <= 38) {
-		couleur_ = 2; //Trèfle
+		couleur_ = 2; //TrÃ¨fle
 	}
 	else {
 		couleur_ = 3; //Pique
@@ -43,7 +43,7 @@ void Cartes::afficher_cartes()
 {
 	//Affichage des symboles
 	if (get_symbole() < 9) { //si le symbole est un nombre
-		cout << get_symbole();
+		cout << get_symbole()+2;
 	}
 	else {
 		char symbole;
@@ -61,7 +61,7 @@ void Cartes::afficher_cartes()
 			symbole = 'A'; //As
 			break;
 		default:
-			symbole = '!'; //Non défini
+			symbole = '!'; //Non dÃ©fini
 			break;
 		}
 		cout << symbole;
@@ -70,18 +70,20 @@ void Cartes::afficher_cartes()
 	switch (get_couleur())
 	{
 	case 0:
-		cout <<"Co"; //Coeur
+		
+		cout <<"Coeur"; //Coeur
 		break;
 	case 1:
-		cout << "Ca";//Carreau
+		cout << "Carreau";//Carreau
 		break;
 	case 2:
-		cout << "Tr"; //Trèfle
+		cout << "Trefle"; //TrÃ¨fle
 		break;
 	case 3:
-		cout << "Pi"; //Pique
+		cout << "Pique"; //Pique
+		break;
 	default:
-		cout << "!"; //Non défini
+		cout << "!"; //Non dÃ©fini
 		break;
 	}
 }

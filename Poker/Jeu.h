@@ -31,8 +31,8 @@ class Jeu
 		const int get_phase() { return phase_; };
 		void set_phase(const int phase) { phase_ = phase; }
 		const void afficher_cartes_tables();
-		const void affichage(const int rep) ;
-		void set_joueurs(Joueur joueur) { joueurs_[joueur.get_id()] = joueur; }
+		const void affichage(int rep) ;
+		void set_joueurs(Joueur joueur);
 		void choix(int rep);
 		void set_cartesTable(Cartes* cartesTable) { cartesTable_ = cartesTable; }
 		Cartes* distribuerCartes(const int nbre); //distribue les cartes en les prenant dans la pioche

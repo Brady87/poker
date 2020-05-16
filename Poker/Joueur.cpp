@@ -14,16 +14,18 @@ Joueur::Joueur(int id, string pseudo, int jetons, bool distributeur, bool quiPar
 	choix_ = choix;
 }
 
-Joueur::~Joueur()
+/*Joueur::~Joueur()
 {
 	delete main_;
-}
+}*/
+
 
 void Joueur::afficher_cartes_joueur()
 {
 	main_[0].afficher_cartes(); //Affichage de la première carte
 	cout << " | ";
 	main_[1].afficher_cartes(); // Affichage de la seconde carte
+	cout << endl;
 }
 
 void Joueur::affciher_jetons()
@@ -35,6 +37,38 @@ void Joueur::affciher_jetons()
 	else { // Cas pluriel
 		cout << jetons_ << " jetons." << endl;
 	}
+}
+
+void Joueur::afficher_choix()
+{
+	switch (choix_) {
+	case 0:
+		cout << "n'a pas encore parle" << endl;
+		break;
+	case 1:
+		cout << "a checke" << endl;
+		break;
+	case 2:
+		cout << "a mise" << endl;
+		break;
+	case 3:
+		cout << "a suivi" << endl;
+		break;
+	case 4:
+		cout << " se couche" << endl;
+		break;
+	default:
+		cout << "a fait n'importe quoi" << endl;
+		break;
+	}
+}
+
+void Joueur::afficher()
+{
+	cout << get_pseudo() << endl;
+	cout << "Distributeur : " << get_distributeur()<<endl;
+	affciher_jetons();
+	afficher_cartes_joueur();
 }
 
 void Joueur::sauver_joueur(ofstream& flux)
@@ -55,23 +89,22 @@ void Joueur::sauver_joueur(ofstream& flux)
 		for (int i = 0; i < 2; i++) {
 			flux << main_[i].get_idCarte() << endl; // Ecriture des cartes du jeu
 		}
-
+		flux.close();
 	//}
-	if (!flux.good()) {
+	/*if (!flux.good()) {
 		cout << "Erreur d'ecriture" << endl;
 	}
 	else {
 		cout << "Sauvegarde effectuee avec succes" << endl;
-	}
-	flux.close();
+	}*/
 }
 
 void Joueur::lire_joueur(ifstream &flux)
 {
-	if (!flux.is_open()) {
+	/*if (!flux.is_open()) {
 		cout << "Erreur d'ouverture" << endl;
 	}
-	else {
+	else {*/
 		int id0, id1;
 		Cartes* main = new Cartes[2];
 		flux >> id_;
@@ -88,13 +121,14 @@ void Joueur::lire_joueur(ifstream &flux)
 		main[0] = c0;
 		main[1] = c1;
 		main_ = main;
-		if (!flux.good()) {
+		flux.close();
+	/*	if (!flux.good()) {
 			cout << "Erreur de lecture" << endl;
 		}
 		else {
 			cout << "Lecture terminée" << endl;
 		}
-	}
+	}*/
 
 }
 
