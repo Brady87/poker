@@ -58,21 +58,18 @@ void main() {
 	ofstream sauvegardeJeu;
 	ifstream lectJeu("jeu.txt");
 	Joueur adversaire;
-
-	vous.sauver_joueur(maSauvegarde); // On stocke nos infos
-	while (adversaire.get_id() != 1-rep) { //Tant que le joueur n'a pas choisi l'option adéquate
+	vous.sauver_joueur(maSauvegarde); // On sauvegarde nos infos
+	maLecture.close();
+	while (adversaire.get_id() != 1 - rep) { //Tant que le joueur n'a pas choisi l'option adéquate
 		lectAdv.open(fichieradv); // On ouvre le fichier de l'adversaire
 		adversaire.lire_joueur(lectAdv); //On récupère les infos liées à l'adversaire
 		cout << "En attente de votre adversaire ..." << endl;
 		system("cls");
 		lectAdv.close();
-		maLecture.close();
 	}
-	jeu.set_joueurs(vous); // affectation des joueurs au jeu
 	jeu.set_joueurs(adversaire);
+	jeu.set_joueurs(vous); // affectation des joueurs au jeu
 	if (rep == 1) {// Si serveur on fait les tirages 
-		sauvegardeAdv.open(fichieradv); // Seul le serveur récolte les données du client
-		sauvegardeJeu.open("jeu.txt");
 		srand(time(NULL)); // Initialisation de rand
 		int aleat = rand() % 2;
 		if (aleat == vous.get_id()) {
@@ -90,12 +87,13 @@ void main() {
 			adversaire.set_quiParle(false);
 		}
 		//Mélange et distribution des cartes
-
 		jeu.melangerCartes(); 
 		vous.set_main(jeu.distribuerCartes(2));
 		adversaire.set_main(jeu.distribuerCartes(2));
 		jeu.set_cartesTable(jeu.distribuerCartes(5));
 		//On sauvegarde une nouvelle fois les joueurs et le jeu
+		sauvegardeAdv.open(fichieradv); // Seul le serveur récolte les données du client
+		sauvegardeJeu.open("jeu.txt");
 		maSauvegarde.open(monfichier);
 		vous.sauver_joueur(maSauvegarde); //on sauvegarde
 		adversaire.sauver_joueur(sauvegardeAdv);
@@ -107,25 +105,22 @@ void main() {
 	}
 	else {//Si client, on récupère les infos venant du serveur
 		while (!vous.get_quiParle() && !adversaire.get_quiParle()) {// Tant qu'on ne sait pas qui commence
-			lectAdv.open(fichieradv); // On ouvre les fichiers
+			 // On ouvre les fichiers
+			lectAdv.open(fichieradv);
 			maLecture.open(monfichier);
 			lectJeu.open("jeu.txt");
-			vous.lire_joueur(maLecture); //On actualise les profils
+			// On actualise les profils
+			vous.lire_joueur(maLecture); 
 			adversaire.lire_joueur(lectAdv);
+			jeu.lire_jeu(lectJeu);
+			// On ferme les flux
 			lectAdv.close();
 			maLecture.close();
 			lectJeu.close();
-
 		}
 	}
 
-//On teste ici si tout est bien lu !!! A ENLEVER  AU FINAL
-	vous.afficher();
-	cout << endl;
-	adversaire.afficher();
-	cout << endl;
-	jeu.afficher_cartes_tables();
-
+//Début du jeu 
 	do {
 		do {
 			while (!vous.get_quiParle()) {//Ce n'est pas à vous de parler
@@ -135,6 +130,10 @@ void main() {
 				maLecture.close();//On ferme notre fichier
 				cout << "Votre adversaire joue..." << endl;
 			}
+			system("cls");
+			maLecture.close();//On ferme nos fichiers
+			lectAdv.close();
+			lectJeu.close();
 			maLecture.open(monfichier); // On récupère les infos
 			lectAdv.open(fichieradv);
 			lectJeu.open("jeu.txt");
@@ -144,7 +143,6 @@ void main() {
 			maLecture.close();//On ferme nos fichiers
 			lectAdv.close();
 			lectJeu.close();
-			system("cls");
 			jeu.affichage(rep); //Affiche les différentes caractéristiques du jeu en cours
 			jeu.choix(rep); //Choix du joueur
 			vous.set_quiParle(!vous.get_quiParle());//On a fini de parler

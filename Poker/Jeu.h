@@ -16,8 +16,8 @@ class Jeu
 		int pot_;
 		Cartes* cartesTable_= new Cartes[5];
 		vector<Cartes> pioche_;
-		int* idJoueur_ = new int[2];
-		Joueur* joueurs_ = new Joueur[2];
+		Joueur* joueurClient_ = new Joueur;
+		Joueur* joueurServeur_ = new Joueur;
 	public:
 		Jeu(int manche = 1, int tour = 1, int pot = 0); //Déclaration du constructeur
 		~Jeu(); //Déclaration du destructeur
@@ -32,7 +32,7 @@ class Jeu
 		void set_phase(const int phase) { phase_ = phase; }
 		const void afficher_cartes_tables();
 		const void affichage(int rep) ;
-		void set_joueurs(Joueur joueur);
+		void set_joueurs(Joueur &joueur);
 		void choix(int rep);
 		void set_cartesTable(Cartes* cartesTable) { cartesTable_ = cartesTable; }
 		Cartes* distribuerCartes(const int nbre); //distribue les cartes en les prenant dans la pioche

@@ -25,7 +25,9 @@ Jeu::Jeu(int manche, int tour, int pot)
 
 Jeu::~Jeu()
 {
-	delete idJoueur_;
+	delete joueurClient_;
+	delete joueurServeur_;
+	delete cartesTable_;
 }
 
 const void Jeu::afficher_cartes_tables()
@@ -56,40 +58,63 @@ const void Jeu::afficher_cartes_tables()
 
 const void Jeu::affichage(int rep)
 {
-	cout << "Manche " << manche_ << endl;
-	cout << "Tour " << tour_ << endl;
+	Joueur vous, adversaire;
+	if (rep == 0) {
+		vous = *joueurClient_;
+		adversaire = *joueurServeur_;
+	}
+	else {
+		vous = *joueurServeur_;
+		adversaire = *joueurClient_; 
+	}
+	cout << "Manche : " << manche_ << endl;
+	cout << "Tour : " << tour_ << endl;
 	cout << "------------------------------" << endl;
 	cout << "Vous : ";
-	joueurs_[rep].affciher_jetons();
-	cout << "Votre mise : " << joueurs_[rep].get_mise() << endl;
+	vous.affciher_jetons();
+	cout << "Votre mise : " << vous.get_mise() << endl;
 	cout << endl;
 	cout << "Adversaire : ";
-	joueurs_[rep - 1].afficher_choix();
-	cout << "Mise adverse : " << joueurs_[rep-1].get_mise() << endl;
-	joueurs_[rep - 1].affciher_jetons();
+	adversaire.afficher_choix();
+	cout << "Mise adverse : " << adversaire.get_mise() << endl;
+	adversaire.affciher_jetons();
 	cout << endl;
 	cout << "Pot : " << pot_ << " jetons." << endl;
 	cout << "Votre main : ";
-	joueurs_[rep].afficher_cartes_joueur();
+	vous.afficher_cartes_joueur();
 	cout << "Sur la table : ";
 	afficher_cartes_tables();
 	cout << "------------------------------" << endl;
 }
 
-void Jeu::set_joueurs(Joueur joueur)
+void Jeu::set_joueurs(Joueur &joueur)
 {
-	const int id = joueur.get_id();
-	joueurs_[id] = joueur;
+	int id = joueur.get_id();
+	if (id == 0) {
+		joueurClient_ = &joueur;
+	}
+	if (id == 1) {
+		joueurServeur_ = &joueur;
+	}
 }
 
 
 void Jeu::choix(int rep)
 {
 
+	Joueur vous, adversaire;
 	int ch;
 	bool valide = false; //Vérifie que le choix effectué est valide
 	do
 	{
+		if (rep == 0) {
+			vous = *joueurClient_;
+			adversaire = *joueurServeur_;
+		}
+		else {
+			vous = *joueurServeur_;
+			adversaire = *joueurClient_;
+		}
 		cout << "Veuillez rentrer votre choix " << endl;
 		cout << "1- Checker " << endl;
 		cout << "2- Miser/Relancer " << endl;
@@ -99,7 +124,7 @@ void Jeu::choix(int rep)
 		switch (ch)
 		{
 		case 1:
-			if (!joueurs_[rep].get_distributeur())
+			if (!vous.get_distributeur())
 			{
 				cout <<"Vous checkez" <<endl;
 				valide = true;
@@ -110,39 +135,40 @@ void Jeu::choix(int rep)
 			break;
 		case 2:
 			int mise;
-			if (joueurs_[rep].get_mise() == 0) {
+			if (vous.get_mise() == 0) {
 				cout << "Mise de combien ?" << endl;
 			}
 			else {
 				cout << "Remisez de combien ?" << endl;
 			}
 			cin >> mise;
-			if (joueurs_[rep].get_jetons() < mise) {
+			if (vous.get_jetons() < mise) {
 				cout << "Mise supérieure a votre capital" << endl;
 			}
-			else if (mise+ joueurs_[rep].get_mise() < joueurs_[rep - 1].get_mise()) {
-				cout << "Mise insuffisante : vous devez miser au moins : " << joueurs_[rep - 1].get_mise()- joueurs_[rep].get_mise() << "." << endl;
+			else if (mise+ vous.get_mise() < adversaire.get_mise()) {
+				cout << "Mise insuffisante : vous devez miser au moins : " << adversaire.get_mise()- vous.get_mise() << "." << endl;
 			}
 			else {
-				joueurs_[rep].set_jetons(joueurs_[rep].get_jetons() - mise); //On met à jour son nbre de jetons
-				joueurs_[rep].set_mise(joueurs_[rep].get_mise() + mise); // Mise total durant ce tour
+				vous.set_jetons(vous.get_jetons() - mise); // MàJ nbre de jetons
+				vous.set_mise(vous.get_mise() + mise); // MàJ mise
 				set_pot(get_pot() + mise); // On met à jour le pot
 				valide = true;
 			break;
 		case 3:
-			if (joueurs_[rep].get_mise()+ joueurs_[rep].get_jetons() < joueurs_[rep - 1].get_mise()) {
+			if (vous.get_mise()+ vous.get_jetons() < adversaire.get_mise()) {
 				cout << "Vous ne pouvez pas suivre." << endl; //CAS TAPIS
 			}
 			else {
-				joueurs_[rep].set_jetons(joueurs_[rep].get_jetons() - (joueurs_[rep - 1].get_mise() - joueurs_[rep].get_mise()));
-				cout << "Vous vous alignez en misant " << joueurs_[rep - 1].get_mise() - joueurs_[rep].get_mise() << endl;
-				joueurs_[rep].set_mise(joueurs_[rep-1].get_mise());
+				vous.set_jetons(vous.get_jetons() - (adversaire.get_mise() - vous.get_mise()));
+				cout << "Vous vous alignez en misant " << adversaire.get_mise() - vous.get_mise() << endl;
+				set_pot(get_pot() + (adversaire.get_mise() - vous.get_mise()));// On s'aligne sur le pot
+				vous.set_mise(adversaire.get_mise()); //On s'aligne sur la mise de l'adversaire
 				valide = true;
 			}
 			break;
 			case 4:
 				cout <<"Vous vous couchez." <<endl;
-				joueurs_[rep - 1].set_jetons(joueurs_[rep - 1].get_jetons() + get_pot());
+				adversaire.set_jetons(adversaire.get_jetons() + get_pot());
 				valide = true;
 				break;
 			}
@@ -153,8 +179,16 @@ void Jeu::choix(int rep)
 		}
 
 	} while (!valide);
-	joueurs_[rep].set_choix(ch); // On affecte le choix
-
+	vous.set_choix(ch); // On affecte le choix
+	//Réaffectation
+	if (rep == 0) {
+		*joueurClient_=vous;
+		 *joueurServeur_= adversaire;
+	}
+	else {
+		*joueurServeur_= vous ;
+		*joueurClient_ = adversaire;
+	}
 }
 
 Cartes* Jeu::distribuerCartes(const int nbre)
@@ -181,9 +215,18 @@ int* Jeu::combinaison(const int idJoueur)
 	int idCombinaison=0;// De 0 à 9
 	int idValeurCombinaison=0;// De 0 à 12
 	int idValeurCombinaison1 = 0;
+	Cartes* mainTable = new Cartes[5];
+	Cartes* main1 = new Cartes[2];
 	//On prend la main du joueur ayant idJoueur
-	Cartes* main1 = joueurs_[idJoueur].get_main();
-	Cartes* mainTable = cartesTable_;
+	if (idJoueur == 0) {
+		Cartes* main1 = joueurClient_->get_main();
+		Cartes* mainTable = cartesTable_;
+	}
+	if (idJoueur == 1) {
+		Cartes* main1 = joueurServeur_->get_main();
+		Cartes* mainTable = cartesTable_;
+	}
+	
 	//On sort les valeurs
 	int tabCouleur[4];
 	int tabSymbole[13];
@@ -910,46 +953,43 @@ void Jeu::sauver_jeu(ofstream &flux)
 	}
 void Jeu::sauver_joueur(const int id,ofstream &flux)
 {
-	joueurs_[id].sauver_joueur(flux);
+	if (id == 0) {
+		joueurClient_->sauver_joueur(flux);
+	}
+	if (id == 1) {
+		joueurServeur_->sauver_joueur(flux);
+	}
+	
 }
 
-void Jeu::lire_jeu(ifstream& flux)
+void Jeu::lire_jeu(ifstream &flux)
 {
-	if (!flux.is_open()) {
-		cout << "Erreur d'ouverture" << endl;
-		system("cls");
-	}
-	else{
-		int id0 ,id1, id2, id3, id4;
-		flux >> manche_;
-		flux >> tour_;
-		flux >> phase_;
-		flux >> pot_;
-		flux >> id0;
-		flux >> id1;
-		flux >> id2;
-		flux >> id3;
-		flux >> id4;
-		cartesTable_[0].set_idCarte(id0);
-		cartesTable_[1].set_idCarte(id1);
-		cartesTable_[2].set_idCarte(id2);
-		cartesTable_[3].set_idCarte(id3);
-		cartesTable_[4].set_idCarte(id4);
-		/*if (!flux.good()) {
-			cout << "Erreur de lecture" << endl;
-		}
-		else {
-			cout << "Lecture terminée" << endl;
-		}*/
-		}
+	int id0 ,id1, id2, id3, id4;
+	flux >> manche_;
+	flux >> tour_;
+	flux >> phase_;
+	flux >> pot_;
+	flux >> id0;
+	flux >> id1;
+	flux >> id2;
+	flux >> id3;
+	flux >> id4;
+	cartesTable_[0].set_idCarte(id0);
+	cartesTable_[1].set_idCarte(id1);
+	cartesTable_[2].set_idCarte(id2);
+	cartesTable_[3].set_idCarte(id3);
+	cartesTable_[4].set_idCarte(id4);
 	flux.close();
-
 }
 
 void Jeu::lire_joueur(const int id, ifstream& flux)
 {
-	joueurs_[id].lire_joueur(flux);
-
+	if (id == 0) {
+		joueurClient_->lire_joueur(flux);
+	}
+	if (id == 1) {
+		joueurServeur_->lire_joueur(flux);
+	}
 }
 
 
