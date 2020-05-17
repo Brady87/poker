@@ -66,6 +66,7 @@ void Cartes::afficher_cartes()
 		}
 		cout << symbole;
 	}
+	cout << " ";
 	//Affichage des couleurs
 	switch (get_couleur())
 	{

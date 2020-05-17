@@ -75,9 +75,10 @@ const void Jeu::affichage(int rep)
 	cout << "Votre mise : " << vous.get_mise() << endl;
 	cout << endl;
 	cout << "Adversaire : ";
-	adversaire.afficher_choix();
-	cout << "Mise adverse : " << adversaire.get_mise() << endl;
 	adversaire.affciher_jetons();
+	cout << "Mise adverse : " << adversaire.get_mise() << " jetons." <<endl;
+	cout << "Votre adversaire ";
+	adversaire.afficher_choix();
 	cout << endl;
 	cout << "Pot : " << pot_ << " jetons." << endl;
 	cout << "Votre main : ";
@@ -189,6 +190,17 @@ void Jeu::choix(int rep)
 		*joueurServeur_= vous ;
 		*joueurClient_ = adversaire;
 	}
+}
+
+void Jeu::nouvelle_donne()
+{
+	//Pioche par défaut
+	vector<Cartes> pioche(52);
+	for (int i = 0; i < 52; i++) {
+		Cartes c(i);
+		pioche[i] = c;
+	}
+	pioche_ = pioche;
 }
 
 Cartes* Jeu::distribuerCartes(const int nbre)

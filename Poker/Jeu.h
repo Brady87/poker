@@ -34,6 +34,7 @@ class Jeu
 		const void affichage(int rep) ;
 		void set_joueurs(Joueur &joueur);
 		void choix(int rep);
+		void nouvelle_donne();
 		void set_cartesTable(Cartes* cartesTable) { cartesTable_ = cartesTable; }
 		Cartes* distribuerCartes(const int nbre); //distribue les cartes en les prenant dans la pioche
 		void melangerCartes(); //Mélange les cartes
