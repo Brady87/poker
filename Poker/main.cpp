@@ -123,123 +123,152 @@ void main() {
 				lectJeu.close();
 			}
 		}
-		do {//Nouvelle manche
-			while (manche != jeu.get_manche() && tour != jeu.get_tour()) {// Permet synchro au fichier jeu.txt
-				cout << "En attente du serveur ..." << endl;
-				// On ouvre les fichiers
-				lectJeu.open("jeu.txt");
-				lectAdv.open(fichieradv);
-				maLecture.open(monfichier);
-				// On actualise les profils
-				vous.lire_joueur(maLecture);
-				adversaire.lire_joueur(lectAdv);
-				jeu.lire_jeu(lectJeu);
-				// On ferme les flux
-				lectAdv.close();
-				maLecture.close();
-				lectJeu.close();
-				system("cls");
-			}
-			do {//Nouveau tour
-				while (!vous.get_quiParle()) {//Ce n'est pas à vous de parler
-					cout << "Votre adversaire joue..." << endl;
-					maLecture.open(monfichier); // On ouvre notre fichier
+		do {//Nouvelle partie
+			do {//Nouvelle manche
+				do {//Nouveau tour
+					while (manche != jeu.get_manche() || tour != jeu.get_tour()) {// Permet synchro au fichier jeu.txt
+						cout << "En attente du serveur ..." << endl;
+						maLecture.close();//On ferme nos fichiers
+						lectAdv.close();
+						lectJeu.close();
+						// On ouvre les fichiers
+						lectJeu.open("jeu.txt");
+						lectAdv.open(fichieradv);
+						maLecture.open(monfichier);
+						// On actualise les profils
+						vous.lire_joueur(maLecture);
+						adversaire.lire_joueur(lectAdv);
+						jeu.lire_jeu(lectJeu);
+						// On referme les flux
+						lectAdv.close();
+						maLecture.close();
+						lectJeu.close();
+						system("cls");
+					}
+					while (!vous.get_quiParle()) {//Ce n'est pas à vous de parler
+						cout << "Votre adversaire joue..." << endl;
+						maLecture.open(monfichier); // On ouvre notre fichier
+						vous.lire_joueur(maLecture); // On récupère les infos
+						maLecture.close();//On ferme notre fichier
+						system("cls");
+					}
+					system("cls");
+					maLecture.close();//On ferme les flux
+					lectAdv.close();
+					lectJeu.close();
+					maLecture.open(monfichier); //On ouvre les flux
+					lectAdv.open(fichieradv);
+					lectJeu.open("jeu.txt");
 					vous.lire_joueur(maLecture); // On récupère les infos
-					maLecture.close();//On ferme notre fichier
+					adversaire.lire_joueur(lectAdv);
+					jeu.lire_jeu(lectJeu);
+					maLecture.close();//On ferme les flux
+					lectAdv.close();
+					lectJeu.close();
+					if (jeu.get_tour() < 5) {
+						jeu.affichage(rep); //Affiche les différentes caractéristiques du jeu en cours
+						if (adversaire.get_choix() == 3 || (adversaire.get_choix() == 1 && vous.get_choix() == 1)) {// Si l'adversaire suit ou que les deux checkent
+							//On ne propose pas de choix
+						}
+						else if (adversaire.get_choix() == 4) {// Si l'adversaire se couche
+							vous.set_jetons(vous.get_jetons() + jeu.get_pot());
+							cout << "Vous remportez " << jeu.get_pot() << endl;
+							cout << "Appuyer sur une touche pour continuer" << endl;
+							system("pause");
+						}
+						else {
+							jeu.choix(rep); //Choix du joueur
+							vous.set_quiParle(!vous.get_quiParle());//On a fini de parler
+							if (jeu.get_tour() < 5) {
+								adversaire.set_quiParle(!adversaire.get_quiParle());// On notifie que ça va être au tour de l'adversaire si ce n'est pas la fin
+							}
+						}
+						maSauvegarde.close();//On ferme nos fichiers
+						sauvegardeAdv.close();
+						sauvegardeJeu.close();
+						maSauvegarde.open(monfichier); // On récupère les flux
+						sauvegardeAdv.open(fichieradv);
+						sauvegardeJeu.open("jeu.txt");
+						vous.sauver_joueur(maSauvegarde); // On met à jour les joueurs dans les fichiers
+						adversaire.sauver_joueur(sauvegardeAdv);
+						jeu.sauver_jeu(sauvegardeJeu);
+						maSauvegarde.close();//On ferme nos fichiers
+						sauvegardeAdv.close();
+						sauvegardeJeu.close();
+					}
+				} while ((vous.get_choix() != 4 && adversaire.get_choix() != 4) && (vous.get_mise() != adversaire.get_mise() || (vous.get_choix() != 1 || adversaire.get_choix() != 1)) && (vous.get_choix() != 1 || adversaire.get_choix() != 1));// Tant que personne n'est couché et que les mises ne sont pas égales
+				if (rep == 1) { //Seul le serveur effectue la sauvegarde
+					jeu.set_tour(jeu.get_tour() + 1);//Tour +1
+					vous.set_mise(0);// On remet à zéro les mises
+					adversaire.set_mise(0);
+					if (vous.get_choix() != 4 && adversaire.get_choix() != 4) {// Si personne ne s'est couche
+						vous.set_choix(0); //RàZ des choix
+						adversaire.set_choix(0);
+					}
+					maSauvegarde.close();//On ferme nos fichiers
+					sauvegardeAdv.close();
+					sauvegardeJeu.close();
+					maSauvegarde.open(monfichier); // On récupère les flux
+					sauvegardeAdv.open(fichieradv);
+					sauvegardeJeu.open("jeu.txt");
+					vous.sauver_joueur(maSauvegarde);// On met à jour les joueurs
+					adversaire.sauver_joueur(sauvegardeAdv);
+					jeu.sauver_jeu(sauvegardeJeu);//On met à jour le jeu
+					maSauvegarde.close();//On ferme nos fichiers
+					sauvegardeAdv.close();
+					sauvegardeJeu.close();
+				}
+				tour++;
+			} while (jeu.get_tour() < 5 && vous.get_choix() != 4 && adversaire.get_choix() != 4); //Tant que personne n'est couché et qu'il reste des tours
+			if (jeu.get_tour() == 5) { // Si on est dans le dernier tour
+				while (!adversaire.get_quiParle() && !vous.get_quiParle()) { //On attend que l'adversaire est fini de parler
+					cout << "En attente de l'adversaire ..." << endl;
 					system("cls");
 				}
-				system("cls");
-				maLecture.close();//On ferme nos fichiers
-				lectAdv.close();
-				lectJeu.close();
-				maLecture.open(monfichier); //On ouvre les flux
-				lectAdv.open(fichieradv);
-				lectJeu.open("jeu.txt");
-				vous.lire_joueur(maLecture); // On récupère les infos
-				adversaire.lire_joueur(lectAdv);
-				jeu.lire_jeu(lectJeu);
-				maLecture.close();//On ferme nos fichiers
-				lectAdv.close();
-				lectJeu.close();
-				jeu.affichage(rep); //Affiche les différentes caractéristiques du jeu en cours
-				if (adversaire.get_choix() == 3 || (adversaire.get_choix()==1 && vous.get_choix()==1)) {// Si l'adversaire suit ou que les deux checkent
-					//On ne propose pas de choix
+				if (vous.get_choix() != 4 && adversaire.get_choix() != 4) {// Si les deux joueurs jouent encore
+					system("cls");
+					jeu.afficher_cartes_tables();
+					cout << endl;
+					cout << "Vous : "; //On affiche le nom des mains des joueurs
+					vous.afficher_cartes_joueur();
+					cout << endl;
+					jeu.nomCombinaison(rep);
+					cout << endl;
+					cout << "Votre adversaire : ";
+					adversaire.afficher_cartes_joueur();
+					cout << endl;
+					jeu.nomCombinaison(1 - rep);
+					cout << endl;
+					if (jeu.gagnant() == rep) { //Calcul du gagnant et récompense
+						cout << "Vous gagnez " << jeu.get_pot() << endl;
+						vous.set_jetons(vous.get_jetons() + jeu.get_pot());
+					}
+					else if (jeu.gagnant() == 1 - rep) {
+						cout << "Votre adversaire gagne" << jeu.get_pot() << endl;
+						adversaire.set_jetons(adversaire.get_jetons() + jeu.get_pot());
+					}
+					else {
+						cout << "Egalite" << endl;
+						vous.set_jetons(vous.get_jetons() + (jeu.get_pot() / 2));
+						adversaire.set_jetons(adversaire.get_jetons() + jeu.get_pot() / 2);
+					}
 				}
-				else if (adversaire.get_choix() == 4) {// Si l'adversaire se couche
-					vous.set_jetons(vous.get_jetons() + jeu.get_pot());
-					cout << "Vous remportez " << jeu.get_pot() << endl;
-					cout << "Appuyer sur une touche pour continuer" << endl;
-					int vide;
-					cin >> vide;
+				else if (vous.get_choix() == 4) {
+					adversaire.set_jetons(adversaire.get_jetons() + jeu.get_pot());
+					cout << "L'adversaire remporte le pot" << endl;
 				}
 				else {
-					jeu.choix(rep); //Choix du joueur
-					vous.set_quiParle(!vous.get_quiParle());//On a fini de parler
-					adversaire.set_quiParle(!adversaire.get_quiParle());// On notifie que ça va être au tour de l'adversaire
+					vous.set_jetons(vous.get_jetons() + jeu.get_pot());
+					cout << "Vous remportez le pot" << endl;
 				}
-				maSauvegarde.open(monfichier); // On récupère les flux
-				sauvegardeAdv.open(fichieradv);
-				sauvegardeJeu.open("jeu.txt");
-				vous.sauver_joueur(maSauvegarde); // On met à jour les joueurs dans les fichiers
-				adversaire.sauver_joueur(sauvegardeAdv);
-				jeu.sauver_jeu(sauvegardeJeu);
-				maSauvegarde.close();//On ferme nos fichiers
-				sauvegardeAdv.close();
-				sauvegardeJeu.close();
-			} while (vous.get_choix() != 4 && adversaire.get_choix() != 4 || ((vous.get_mise() != adversaire.get_mise()) && vous.get_choix()==1 && adversaire.get_choix()==1));// Tant que personne n'est couché et que les mises ne sont pas égales
-			if (rep == 1) { //Seul le serveur effectue la sauvegarde
-				jeu.set_tour(jeu.get_tour() + 1);//Tour +1
-				vous.set_mise(0);// On remet à zéro les mises
-				adversaire.set_mise(0);
-				if (vous.get_choix() != 4 && adversaire.get_choix() != 4) {// Si personne ne s'est couche
-					vous.set_choix(0); //RàZ des choix
-					adversaire.set_choix(0);
-				}
-				maSauvegarde.open(monfichier); // On récupère les flux
-				sauvegardeAdv.open(fichieradv);
-				sauvegardeJeu.open("jeu.txt");
-				vous.sauver_joueur(maSauvegarde);// On met à jour les joueurs
-				adversaire.sauver_joueur(sauvegardeAdv);
-				jeu.sauver_jeu(sauvegardeJeu);//On met à jour le jeu
-				maSauvegarde.close();//On ferme nos fichiers
-				sauvegardeAdv.close();
-				sauvegardeJeu.close();
-			}
-			tour++;
-		} while (jeu.get_tour() < 5 && vous.get_choix() != 4 && adversaire.get_choix() != 4); //Tant que personne n'est couché et qu'il reste des tours
-		if (vous.get_choix() != 4 && adversaire.get_choix() != 4) {// Si les deux joueurs jouent encore
-			system("cls");
-			jeu.afficher_cartes_tables();
-			cout << endl;
-			cout << "Vous : "; //On affiche le nom des mains des joueurs
-			vous.afficher_cartes_joueur();
-			cout << endl;
-			jeu.nomCombinaison(rep);
-			cout << endl;
-			cout << "Votre adversaire : ";
-			adversaire.afficher_cartes_joueur();
-			cout << endl;
-			jeu.nomCombinaison(1 - rep);
-			cout << endl;
-			if (jeu.gagnant() == rep) { //Calcul du gagnant et récompense
-				cout << "Vous gagnez " << jeu.get_pot() << endl;
-				vous.set_jetons(vous.get_jetons() + jeu.get_pot());
-			}
-			else if (jeu.gagnant() == 1 - rep) {
-				cout << "Votre adversaire gagne" << jeu.get_pot() << endl;
-				adversaire.set_jetons(adversaire.get_jetons() + jeu.get_pot());
-			}
-			else {
-				cout << "Egalite" << endl;
-				vous.set_jetons(vous.get_jetons() + (jeu.get_pot() / 2));
-				adversaire.set_jetons(adversaire.get_jetons() + jeu.get_pot() / 2);
+				system("pause");
 			}
 
 			if (rep == 1) { // Seul le serveur effectue les modifs et la sauvegarde
 				jeu.set_manche(jeu.get_manche() + 1); // Nouvelle manche
 				jeu.set_tour(1); // On repart au premier tour
 				vous.set_distributeur(!vous.get_distributeur());// On change de distributeur
-				adversaire.set_distributeur(!vous.get_distributeur());
+				adversaire.set_distributeur(!adversaire.get_distributeur());
 				vous.set_quiParle(!vous.get_distributeur()); //Si on ne distribue pas on parle en premier
 				adversaire.set_quiParle(!adversaire.get_distributeur());
 				jeu.nouvelle_donne();//On RàZ la pioche
