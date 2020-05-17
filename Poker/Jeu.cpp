@@ -125,7 +125,7 @@ void Jeu::choix(int rep)
 		switch (ch)
 		{
 		case 1:
-			if (!vous.get_distributeur())
+			if (!vous.get_distributeur() || adversaire.get_choix()==1)
 			{
 				cout <<"Vous checkez" <<endl;
 				valide = true;
@@ -140,6 +140,8 @@ void Jeu::choix(int rep)
 				cout << "Mise de combien ?" << endl;
 			}
 			else {
+				cout << "Vous avez deja mise : ";
+				vous.get_mise();
 				cout << "Remisez de combien ?" << endl;
 			}
 			cin >> mise;
@@ -157,7 +159,7 @@ void Jeu::choix(int rep)
 			break;
 		case 3:
 			if (vous.get_mise()+ vous.get_jetons() < adversaire.get_mise()) {
-				cout << "Vous ne pouvez pas suivre." << endl; //CAS TAPIS
+				cout << "Vous ne pouvez pas suivre." << endl; //CAS TAPIS A GERER
 			}
 			else {
 				vous.set_jetons(vous.get_jetons() - (adversaire.get_mise() - vous.get_mise()));
@@ -784,7 +786,7 @@ const void Jeu::nomCombinaison(const int idJoueur)
 			break;
 		}
 	case 7:
-		cout << "Carré ";
+		cout << "Carre ";
 		switch (comb[1]) {
 		case 0:
 			cout << "de 2." << endl;

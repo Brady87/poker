@@ -125,7 +125,8 @@ void main() {
 		}
 		do {//Nouvelle manche
 			while (manche != jeu.get_manche() && tour != jeu.get_tour()) {// Permet synchro au fichier jeu.txt
-				 // On ouvre les fichiers
+				cout << "En attente du serveur ..." << endl;
+				// On ouvre les fichiers
 				lectJeu.open("jeu.txt");
 				lectAdv.open(fichieradv);
 				maLecture.open(monfichier);
@@ -137,14 +138,15 @@ void main() {
 				lectAdv.close();
 				maLecture.close();
 				lectJeu.close();
+				system("cls");
 			}
 			do {//Nouveau tour
 				while (!vous.get_quiParle()) {//Ce n'est pas à vous de parler
-					system("cls");
+					cout << "Votre adversaire joue..." << endl;
 					maLecture.open(monfichier); // On ouvre notre fichier
 					vous.lire_joueur(maLecture); // On récupère les infos
 					maLecture.close();//On ferme notre fichier
-					cout << "Votre adversaire joue..." << endl;
+					system("cls");
 				}
 				system("cls");
 				maLecture.close();//On ferme nos fichiers
@@ -160,7 +162,10 @@ void main() {
 				lectAdv.close();
 				lectJeu.close();
 				jeu.affichage(rep); //Affiche les différentes caractéristiques du jeu en cours
-				if (adversaire.get_choix() == 4) {// Si l'adversaire se couche
+				if (adversaire.get_choix() == 3 || (adversaire.get_choix()==1 && vous.get_choix()==1)) {// Si l'adversaire suit ou que les deux checkent
+					//On ne propose pas de choix
+				}
+				else if (adversaire.get_choix() == 4) {// Si l'adversaire se couche
 					vous.set_jetons(vous.get_jetons() + jeu.get_pot());
 					cout << "Vous remportez " << jeu.get_pot() << endl;
 					cout << "Appuyer sur une touche pour continuer" << endl;
@@ -181,11 +186,15 @@ void main() {
 				maSauvegarde.close();//On ferme nos fichiers
 				sauvegardeAdv.close();
 				sauvegardeJeu.close();
-			} while (vous.get_choix() != 4 && adversaire.get_choix() != 4 && vous.get_mise() != adversaire.get_mise());// Tant que personne n'est couché et que les mises ne sont pas égales
+			} while (vous.get_choix() != 4 && adversaire.get_choix() != 4 || ((vous.get_mise() != adversaire.get_mise()) && vous.get_choix()==1 && adversaire.get_choix()==1));// Tant que personne n'est couché et que les mises ne sont pas égales
 			if (rep == 1) { //Seul le serveur effectue la sauvegarde
 				jeu.set_tour(jeu.get_tour() + 1);//Tour +1
 				vous.set_mise(0);// On remet à zéro les mises
 				adversaire.set_mise(0);
+				if (vous.get_choix() != 4 && adversaire.get_choix() != 4) {// Si personne ne s'est couche
+					vous.set_choix(0); //RàZ des choix
+					adversaire.set_choix(0);
+				}
 				maSauvegarde.open(monfichier); // On récupère les flux
 				sauvegardeAdv.open(fichieradv);
 				sauvegardeJeu.open("jeu.txt");
@@ -197,7 +206,7 @@ void main() {
 				sauvegardeJeu.close();
 			}
 			tour++;
-		} while (jeu.get_tour() < 4 && vous.get_choix() != 4 && adversaire.get_choix() != 4); //Tant que personne n'est couché et qu'il reste des tours
+		} while (jeu.get_tour() < 5 && vous.get_choix() != 4 && adversaire.get_choix() != 4); //Tant que personne n'est couché et qu'il reste des tours
 		if (vous.get_choix() != 4 && adversaire.get_choix() != 4) {// Si les deux joueurs jouent encore
 			system("cls");
 			jeu.afficher_cartes_tables();
@@ -234,6 +243,8 @@ void main() {
 				vous.set_quiParle(!vous.get_distributeur()); //Si on ne distribue pas on parle en premier
 				adversaire.set_quiParle(!adversaire.get_distributeur());
 				jeu.nouvelle_donne();//On RàZ la pioche
+				vous.set_choix(0); //RàZ les choix
+				adversaire.set_choix(0);
 				//Mélange et distribution des cartes
 				jeu.melangerCartes();
 				vous.set_main(jeu.distribuerCartes(2));
