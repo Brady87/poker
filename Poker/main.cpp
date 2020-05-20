@@ -28,7 +28,7 @@ void main() {
 		string pseudo;
 		int rep = -1;
 		int manche = 1;
-		int tour = 1;
+		int phase = 1;
 		Jeu jeu; //Initialisation du jeu
 		Joueur vous; //Création de votre profil
 		cout << "Saisir un pseudo : " << endl;
@@ -75,16 +75,16 @@ void main() {
 		jeu.set_joueurs(vous); // affectation des joueurs au jeu
 		if (rep == 1) {// Si serveur on fait les tirages 
 			srand(time(NULL)); // Initialisation de rand
-			int aleat = rand() % 2;
-			if (aleat == vous.get_id()) {
-				cout << "Vous etes le premier distributeur." << endl;
+			int aleat = rand() % 2; //Choisi un nombre entre 0 et 1
+			if (aleat == 1) {
+				cout << "Le serveur distribue." << endl;
 				vous.set_distributeur(true);
 				adversaire.set_distributeur(false);
 				vous.set_quiParle(false);//Vous ne jouez pas en 1er
 				adversaire.set_quiParle(true);
 			}
 			else {
-				cout << "Votre adversaire distribue les cartes." << endl;
+				cout << "Le client distribue." << endl;
 				vous.set_distributeur(false);
 				adversaire.set_distributeur(true);
 				vous.set_quiParle(true);//Vous jouez en premier
@@ -126,7 +126,23 @@ void main() {
 		do {//Nouvelle partie
 			do {//Nouvelle manche
 				do {//Nouveau tour
-					while (manche != jeu.get_manche() || tour != jeu.get_tour()) {// Permet synchro au fichier jeu.txt
+					// On récupère les infos une première fois
+					maLecture.close();//On ferme nos fichiers
+					lectAdv.close();
+					lectJeu.close();
+					// On ouvre les fichiers
+					lectJeu.open("jeu.txt");
+					lectAdv.open(fichieradv);
+					maLecture.open(monfichier);
+					// On actualise les profils
+					vous.lire_joueur(maLecture);
+					adversaire.lire_joueur(lectAdv);
+					jeu.lire_jeu(lectJeu);
+					// On referme les flux
+					lectAdv.close();
+					maLecture.close();
+					lectJeu.close();
+					while (manche != jeu.get_manche() && !vous.get_quiParle()) {// Permet synchro au fichier jeu.txt
 						cout << "En attente du serveur ..." << endl;
 						maLecture.close();//On ferme nos fichiers
 						lectAdv.close();
@@ -147,6 +163,7 @@ void main() {
 					}
 					while (!vous.get_quiParle()) {//Ce n'est pas à vous de parler
 						cout << "Votre adversaire joue..." << endl;
+						maLecture.close();//On ferme notre fichier
 						maLecture.open(monfichier); // On ouvre notre fichier
 						vous.lire_joueur(maLecture); // On récupère les infos
 						maLecture.close();//On ferme notre fichier
@@ -168,7 +185,8 @@ void main() {
 					if (jeu.get_tour() < 5) {
 						jeu.affichage(rep); //Affiche les différentes caractéristiques du jeu en cours
 						if (adversaire.get_choix() == 3 || (adversaire.get_choix() == 1 && vous.get_choix() == 1)) {// Si l'adversaire suit ou que les deux checkent
-							//On ne propose pas de choix
+						//GERER MISES EGALES
+						//On ne propose pas de choix
 						}
 						else if (adversaire.get_choix() == 4) {// Si l'adversaire se couche
 							vous.set_jetons(vous.get_jetons() + jeu.get_pot());
@@ -197,7 +215,6 @@ void main() {
 						sauvegardeJeu.close();
 					}
 				} while ((vous.get_choix() != 4 && adversaire.get_choix() != 4) && (vous.get_mise() != adversaire.get_mise() || (vous.get_choix() != 1 || adversaire.get_choix() != 1)) && (vous.get_choix() != 1 || adversaire.get_choix() != 1));// Tant que personne n'est couché et que les mises ne sont pas égales
-				if (rep == 1) { //Seul le serveur effectue la sauvegarde
 					jeu.set_tour(jeu.get_tour() + 1);//Tour +1
 					vous.set_mise(0);// On remet à zéro les mises
 					adversaire.set_mise(0);
@@ -217,14 +234,8 @@ void main() {
 					maSauvegarde.close();//On ferme nos fichiers
 					sauvegardeAdv.close();
 					sauvegardeJeu.close();
-				}
-				tour++;
 			} while (jeu.get_tour() < 5 && vous.get_choix() != 4 && adversaire.get_choix() != 4); //Tant que personne n'est couché et qu'il reste des tours
-			if (jeu.get_tour() == 5) { // Si on est dans le dernier tour
-				while (!adversaire.get_quiParle() && !vous.get_quiParle()) { //On attend que l'adversaire est fini de parler
-					cout << "En attente de l'adversaire ..." << endl;
-					system("cls");
-				}
+			if (jeu.get_tour() >= 5) { // Si on est dans le dernier tour
 				if (vous.get_choix() != 4 && adversaire.get_choix() != 4) {// Si les deux joueurs jouent encore
 					system("cls");
 					jeu.afficher_cartes_tables();
@@ -290,7 +301,6 @@ void main() {
 				sauvegardeJeu.close();
 			}
 			manche++;
-			tour = 1;
 		}while (vous.get_jetons() > 0 && adversaire.get_jetons() > 0); // Tant que personne n'a plus de jetons
 		if (vous.get_jetons() > 0) {
 			cout << "Félicitations vous avez gagne !" << endl;
