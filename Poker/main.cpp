@@ -142,7 +142,7 @@ void main() {
 					lectAdv.close();
 					maLecture.close();
 					lectJeu.close();
-					while (manche != jeu.get_manche() && !vous.get_quiParle()) {// Permet synchro au fichier jeu.txt
+					while (manche != jeu.get_manche()) {// Permet synchro au fichier jeu.txt
 						cout << "En attente du serveur ..." << endl;
 						maLecture.close();//On ferme nos fichiers
 						lectAdv.close();
