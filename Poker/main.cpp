@@ -156,8 +156,9 @@ void main() {
 						adversaire.sauver_joueur(sauvegardeAdv,fichieradv);
 						jeu.sauver_jeu(sauvegardeJeu,"jeu.txt");
 					}
-				} while (jeu.get_tour()<5&&(vous.get_choix() != 4 && adversaire.get_choix() != 4) && (vous.get_mise() != adversaire.get_mise() || (vous.get_choix() != 1 || adversaire.get_choix() != 1)) && (vous.get_choix() != 1 || adversaire.get_choix() != 1));// Tant que personne n'est couché et que les mises ne sont pas égales
-					jeu.set_tour(jeu.get_tour() + 1);//Tour +1
+				} while (!((vous.get_choix() == 1 && adversaire.get_choix() == 1) || (vous.get_mise() == adversaire.get_mise() && (vous.get_choix() != 1 && adversaire.get_mise() != 1) || vous.get_choix() == 4 || adversaire.get_choix() == 4)));// Tant que personne n'est couché et que les mises ne sont pas égales
+				//adversaire.get_choix()!=3 && jeu.get_tour()<5 && (vous.get_choix() != 4 && adversaire.get_choix() != 4) && (vous.get_mise() != adversaire.get_mise() || (vous.get_choix() != 1 || adversaire.get_choix() != 1)) && (vous.get_choix() != 1 || adversaire.get_choix() != 1)
+				jeu.set_tour(jeu.get_tour() + 1);//Tour +1
 					vous.set_mise(0);// On remet à zéro les mises
 					adversaire.set_mise(0);
 					if (vous.get_choix() != 4 && adversaire.get_choix() != 4) {// Si personne ne s'est couche
