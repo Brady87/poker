@@ -233,12 +233,12 @@ int* Jeu::combinaison(const int idJoueur)
 	Cartes* main1 = new Cartes[2];
 	//On prend la main du joueur ayant idJoueur
 	if (idJoueur == 0) {
-		Cartes* main1 = joueurClient_->get_main();
-		Cartes* mainTable = cartesTable_;
+		main1 = joueurClient_->get_main();
+		mainTable = cartesTable_;
 	}
 	if (idJoueur == 1) {
-		Cartes* main1 = joueurServeur_->get_main();
-		Cartes* mainTable = cartesTable_;
+		main1 = joueurServeur_->get_main();
+		mainTable = cartesTable_;
 	}
 	
 	//On sort les valeurs
@@ -324,6 +324,7 @@ int* Jeu::combinaison(const int idJoueur)
 		for (int i = 0; i < 4; i++) {
 			if (tabCouleur[i] >= 5) {
 				idCombinaison = 5;
+				idValeurCombinaison1 = i;
 				int j = 0;
 				while (tabId[13 * (i + 1) - j - 1] == 0) {
 					j++;
@@ -393,7 +394,9 @@ int* Jeu::combinaison(const int idJoueur)
 const void Jeu::nomCombinaison(const int idJoueur)
 {
 	int* comb = new int[3];
-	comb=combinaison(idJoueur);
+	comb[0] = combinaison(idJoueur)[0];
+	comb[1] = combinaison(idJoueur)[1];
+	comb[2] = combinaison(idJoueur)[2];
 	switch (comb[0]) {
 	case 0:
 		cout << "Main haute ";
@@ -676,7 +679,7 @@ const void Jeu::nomCombinaison(const int idJoueur)
 		break;
 	case 5:
 		cout << "Couleur ";
-		switch (comb[1]) {
+		switch (comb[2]) {
 		case 0:
 			cout << "a coeur.";
 			break;
@@ -690,7 +693,7 @@ const void Jeu::nomCombinaison(const int idJoueur)
 			cout << "a pique.";
 			break;
 		default:
-			cout << "Couleur inconnue";
+			cout << "inconnue.";
 			break;
 		}
 		break;
@@ -909,28 +912,34 @@ const void Jeu::nomCombinaison(const int idJoueur)
 
 const int Jeu::gagnant()
 {
+	int* comb0 = new int[3];
+	int* comb1 = new int[3];
+	for (int i = 0; i < 3; i++) {
+		comb0[i] = combinaison(0)[i];
+		comb1[i] = combinaison(1)[i];
+	}
 	//Renvoie l'id du gagnant, -1 en cas de match nul
-	if (combinaison(0)[0] > combinaison(1)[0]) {
+	if (comb0[0] > comb1[0]) {
 		return 0;
 	}
-	else if (combinaison(0)[0] < combinaison(1)[0]) {
+	else if (comb0[0] < comb1[0]) {
 		return 1;
 	}
-	else if (combinaison(0)[0] == combinaison(1)[0] && combinaison(0)[0] == 9) {//Cas deux quintes flushs royales
+	else if (comb0[0] == comb1[0] && comb0[0] == 9) {//Cas deux quintes flushs royales
 		return -1;
 	}
 	else {
-		if (combinaison(0)[1] > combinaison(1)[1]) {
+		if (comb0[1] > comb1[1]) {
 			return 0;
 		}
-		else if (combinaison(0)[1] < combinaison(1)[1]) {
+		else if (comb0[1] < comb1[1]) {
 			return 1;
 		}
 		else {
-			if (combinaison(0)[2] > combinaison(1)[2]) {
+			if (comb0[2] > comb1[2]) {
 				return 0;
 			}
-			else if (combinaison(0)[2] < combinaison(1)[2]) {
+			else if (comb0[2] < comb1[2]) {
 				return 1;
 			}
 			else {

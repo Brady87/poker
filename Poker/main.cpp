@@ -189,7 +189,7 @@ void main() {
 						vous.set_jetons(vous.get_jetons() + jeu.get_pot());
 					}
 					else if (jeu.gagnant() == 1 - rep) {
-						cout << "Votre adversaire gagne" << jeu.get_pot() << endl;
+						cout << "Votre adversaire gagne " << jeu.get_pot() << endl;
 						adversaire.set_jetons(adversaire.get_jetons() + jeu.get_pot());
 					}
 					else {
