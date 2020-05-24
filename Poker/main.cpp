@@ -144,7 +144,7 @@ int main() {
 
 					}
 					jeu.affichage(rep); //Affiche les différentes caractéristiques du jeu en cours
-					if (adversaire.get_choix() == 4 || adversaire.get_choix() == 3 || (adversaire.get_choix() == 1 && vous.get_choix() == 1) || vous.get_jetons()==0 ) {// Si l'adversaire suit ou que les deux checkent
+					if (adversaire.get_choix() == 4 || adversaire.get_choix() == 3 || (adversaire.get_choix() == 1 && vous.get_choix() == 1) || vous.get_jetons()==0 || adversaire.get_jetons()==0) {// Si l'adversaire suit ou que les deux checkent
 					//On ne propose pas de choix
 					}
 					else {
@@ -171,7 +171,7 @@ int main() {
 				vous.sauver_joueur(maSauvegarde,monfichier);// On met à jour les joueurs
 				adversaire.sauver_joueur(sauvegardeAdv,fichieradv);
 				jeu.sauver_jeu(sauvegardeJeu,"jeu.txt");//On met à jour le jeu
-		} while (!(jeu.get_tour() >= 5 || vous.get_choix() == 4 || adversaire.get_choix() == 4||vous.get_jetons()==0||adversaire.get_jetons()==0)); //Tant que personne n'est couché et qu'il reste des tours
+		} while (!(jeu.get_tour() >= 5 || vous.get_choix() == 4 || adversaire.get_choix() == 4||vous.get_jetons()==0||adversaire.get_jetons()==0)); //Tant que personne n'est couché, a sec, et qu'il reste des tours
 		if (vous.get_choix() != 4 && adversaire.get_choix() != 4) {// Si les deux joueurs jouent encore
 			system("cls");
 			jeu.set_tour(5); //Pour afficher toutes les cartes

@@ -150,11 +150,12 @@ void Jeu::choix(int rep)
 				cout << "Mise insuffisante : vous devez miser au moins : " << adversaire.get_mise()- vous.get_mise() << "." << endl;
 			}
 			else {
-				if (adversaire.get_jetons()+adversaire.get_mise()<mise) {
-					cout << "Votre mise excede le capital de l'adversaire." << endl;
-					cout << "Vous misez " << adversaire.get_jetons() << "." << endl;
+				if (adversaire.get_jetons() + adversaire.get_mise()  - vous.get_mise() <mise) {
+					cout << "Votre mise excede les possibilites de l'adversaire." << endl;
+					mise = adversaire.get_jetons() + adversaire.get_mise() - vous.get_mise();
+					cout << "Vous misez " << mise << "." << endl;
 					system("pause");
-					mise = adversaire.get_jetons();
+					
 				}
 				vous.set_jetons(vous.get_jetons() - mise); // MàJ nbre de jetons
 				vous.set_mise(vous.get_mise() + mise); // MàJ mise
