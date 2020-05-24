@@ -157,7 +157,6 @@ void main() {
 						jeu.sauver_jeu(sauvegardeJeu,"jeu.txt");
 					}
 				} while (!((vous.get_choix() == 1 && adversaire.get_choix() == 1) || (vous.get_mise() == adversaire.get_mise() && (vous.get_choix() != 1 && adversaire.get_mise() != 1) || vous.get_choix() == 4 || adversaire.get_choix() == 4)));// Tant que personne n'est couché et que les mises ne sont pas égales
-				//adversaire.get_choix()!=3 && jeu.get_tour()<5 && (vous.get_choix() != 4 && adversaire.get_choix() != 4) && (vous.get_mise() != adversaire.get_mise() || (vous.get_choix() != 1 || adversaire.get_choix() != 1)) && (vous.get_choix() != 1 || adversaire.get_choix() != 1)
 				jeu.set_tour(jeu.get_tour() + 1);//Tour +1
 					vous.set_mise(0);// On remet à zéro les mises
 					adversaire.set_mise(0);
@@ -169,45 +168,43 @@ void main() {
 					adversaire.sauver_joueur(sauvegardeAdv,fichieradv);
 					jeu.sauver_jeu(sauvegardeJeu,"jeu.txt");//On met à jour le jeu
 			} while (jeu.get_tour() < 5 && vous.get_choix() != 4 && adversaire.get_choix() != 4); //Tant que personne n'est couché et qu'il reste des tours
-			if (jeu.get_tour() >= 5) { // Si on est dans le dernier tour
-				if (vous.get_choix() != 4 && adversaire.get_choix() != 4) {// Si les deux joueurs jouent encore
-					system("cls");
-					jeu.afficher_cartes_tables();
-					cout << endl;
-					cout << "Vous : "; //On affiche le nom des mains des joueurs
-					vous.afficher_cartes_joueur();
-					cout << endl;
-					jeu.nomCombinaison(rep);
-					cout << endl;
-					cout << "Votre adversaire : ";
-					adversaire.afficher_cartes_joueur();
-					cout << endl;
-					jeu.nomCombinaison(1 - rep);
-					cout << endl;
-					if (jeu.gagnant() == rep) { //Calcul du gagnant et récompense
-						cout << "Vous gagnez " << jeu.get_pot() << endl;
-						vous.set_jetons(vous.get_jetons() + jeu.get_pot());
-					}
-					else if (jeu.gagnant() == 1 - rep) {
-						cout << "Votre adversaire gagne " << jeu.get_pot() << endl;
-						adversaire.set_jetons(adversaire.get_jetons() + jeu.get_pot());
-					}
-					else {
-						cout << "Egalite" << endl;
-						vous.set_jetons(vous.get_jetons() + (jeu.get_pot() / 2));
-						adversaire.set_jetons(adversaire.get_jetons() + jeu.get_pot() / 2);
-					}
+			if (vous.get_choix() != 4 && adversaire.get_choix() != 4) {// Si les deux joueurs jouent encore
+				system("cls");
+				jeu.afficher_cartes_tables();
+				cout << endl;
+				cout << "Vous : "; //On affiche le nom des mains des joueurs
+				vous.afficher_cartes_joueur();
+				cout << endl;
+				jeu.nomCombinaison(rep);
+				cout << endl;
+				cout << "Votre adversaire : ";
+				adversaire.afficher_cartes_joueur();
+				cout << endl;
+				jeu.nomCombinaison(1 - rep);
+				cout << endl;
+				if (jeu.gagnant() == rep) { //Calcul du gagnant et récompense
+					cout << "Vous gagnez " << jeu.get_pot() << endl;
+					vous.set_jetons(vous.get_jetons() + jeu.get_pot());
 				}
-				else if (vous.get_choix() == 4) {
+				else if (jeu.gagnant() == 1 - rep) {
+					cout << "Votre adversaire gagne " << jeu.get_pot() << endl;
 					adversaire.set_jetons(adversaire.get_jetons() + jeu.get_pot());
-					cout << "L'adversaire remporte le pot" << endl;
 				}
 				else {
-					vous.set_jetons(vous.get_jetons() + jeu.get_pot());
-					cout << "Vous remportez le pot" << endl;
+					cout << "Egalite" << endl;
+					vous.set_jetons(vous.get_jetons() + (jeu.get_pot() / 2));
+					adversaire.set_jetons(adversaire.get_jetons() + jeu.get_pot() / 2);
 				}
-				system("pause");
 			}
+			else if (vous.get_choix() == 4) { //Si vous vous couchez
+				adversaire.set_jetons(adversaire.get_jetons() + jeu.get_pot());
+				cout << "L'adversaire remporte le pot" << endl;
+			}
+			else {// Si votre adversaire se couche
+				vous.set_jetons(vous.get_jetons() + jeu.get_pot());
+				cout << "Vous remportez le pot" << endl;
+			}
+			system("pause");
 
 			if (rep == 1) { // Seul le serveur effectue les modifs et la sauvegarde
 				jeu.set_manche(jeu.get_manche() + 1); // Nouvelle manche

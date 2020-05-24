@@ -32,7 +32,6 @@ Jeu::~Jeu()
 
 const void Jeu::afficher_cartes_tables()
 {
-	cout << "Cartes sur la table : ";
 	if (tour_ == 1) { //1er tour : on affiche rien
 		cout << endl;
 	}
@@ -125,9 +124,9 @@ void Jeu::choix(int rep)
 		switch (ch)
 		{
 		case 1:
-			if (!vous.get_distributeur() || adversaire.get_choix()==1)
-			{
-				cout <<"Vous checkez" <<endl;
+			if ((!vous.get_distributeur() && adversaire.get_mise()==0) || adversaire.get_choix()==1)
+			{//Si on est le premier a parlé ou que l'adversaire a checké on peut checker
+				cout << "Vous checkez" << endl;
 				valide = true;
 			}
 			else {
@@ -140,15 +139,37 @@ void Jeu::choix(int rep)
 				cout << "Mise de combien ?" << endl;
 			}
 			else {
-				cout << "Vous avez deja mise : ";
-				vous.get_mise();
+				cout << "Vous avez deja mise : " << vous.get_mise() << "." << endl;
 				cout << "Remisez de combien ?" << endl;
 			}
 			cin >> mise;
 			if (vous.get_jetons() < mise) {
-				cout << "Mise supérieure a votre capital" << endl;
+				cout << "Mise supérieure a votre capital." << endl;
+				char ch1;
+				do {//Cas tapis
+					cin >> ch1;
+					cout << "Voulez vous faire tapis ? O/N" << endl;
+					if (ch1 == 'O') {
+						cout << "Vous faites tapis et misez" << vous.get_jetons() << "." << endl;
+						mise = vous.get_jetons();
+						vous.set_jetons(0); // MàJ nbre de jetons
+						vous.set_mise(vous.get_mise() + mise); // MàJ mise
+						set_pot(get_pot() + mise); // On met à jour le pot
+						if (mise + vous.get_mise() < adversaire.get_mise()) {//Si on mise en dessous de la mise de l'adversaire
+							set_pot(get_pot() - (adversaire.get_mise() - mise));// On enlève au pot la mise superflu de l'adversaire
+							adversaire.set_jetons(adversaire.get_jetons()+(adversaire.get_mise()-mise));// On recrédite l'adversaire de la différence des mises
+							adversaire.set_mise(vous.get_mise());// On aligne l'adversaire sur nos mises
+						}
+						valide = true;
+					}
+					else if (ch1 == 'N') {
+					}
+					else {
+						cout << "Choix non valide veuillez répondre par O : oui / N: non" << endl;
+					}
+				} while (!(ch1 == 'O' || ch1 == 'N'));
 			}
-			else if (mise+ vous.get_mise() < adversaire.get_mise()) {
+			else if (mise + vous.get_mise() < adversaire.get_mise() ) {
 				cout << "Mise insuffisante : vous devez miser au moins : " << adversaire.get_mise()- vous.get_mise() << "." << endl;
 			}
 			else {
