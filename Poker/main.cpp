@@ -7,7 +7,7 @@ using namespace std;
 
 
 
-void main() {
+int main() {
 	cout << "                                                                   " << endl;
 	cout << "                                                                   " << endl;
 	cout << "                                                                   " << endl;
@@ -75,14 +75,14 @@ void main() {
 		srand(time(NULL)); // Initialisation de rand
 		int aleat = rand() % 2; //Choisi un nombre entre 0 et 1
 		if (aleat == 1) {
-			cout << "Le serveur distribue." << endl;
+			//Le serveur distribue
 			vous.set_distributeur(true);
 			adversaire.set_distributeur(false);
 			vous.set_quiParle(false);//Vous ne jouez pas en 1er
 			adversaire.set_quiParle(true);
 		}
 		else {
-			cout << "Le client distribue." << endl;
+			// Le client distribue
 			vous.set_distributeur(false);
 			adversaire.set_distributeur(true);
 			vous.set_quiParle(true);//Vous jouez en premier
@@ -109,6 +109,8 @@ void main() {
 	}
 	do {//Nouvelle partie
 		do {//Nouvelle manche
+			int petiteMise = 10;
+			int grandeMise = 20;
 			do {//Nouveau tour
 				// On actualise les profils
 				vous.lire_joueur(maLecture,monfichier);
@@ -123,6 +125,7 @@ void main() {
 					system("cls");
 				}
 				while (!vous.get_quiParle()) {//Ce n'est pas à vous de parler
+					jeu.affichage(rep);
 					cout << "Votre adversaire joue..." << endl;
 					vous.lire_joueur(maLecture,monfichier); // On récupère les infos
 					system("cls");
@@ -132,6 +135,14 @@ void main() {
 				adversaire.lire_joueur(lectAdv,fichieradv);
 				jeu.lire_jeu(lectJeu,"jeu.txt");
 				if (jeu.get_tour() < 5) {
+					if (jeu.get_tour() == 1 && !vous.get_distributeur()) {//Mise de départ géré par le premier a parle
+						vous.set_mise(petiteMise);
+						vous.set_jetons(vous.get_jetons() - petiteMise);
+						adversaire.set_jetons(adversaire.get_jetons() - grandeMise);
+						adversaire.set_mise(grandeMise);
+						jeu.set_pot(petiteMise + grandeMise);
+
+					}
 					jeu.affichage(rep); //Affiche les différentes caractéristiques du jeu en cours
 					if (adversaire.get_choix() == 4 || adversaire.get_choix() == 3 || (adversaire.get_choix() == 1 && vous.get_choix() == 1) || vous.get_jetons()==0 ) {// Si l'adversaire suit ou que les deux checkent
 					//On ne propose pas de choix
@@ -155,6 +166,8 @@ void main() {
 					vous.set_choix(0); //RàZ des choix
 					adversaire.set_choix(0);
 				}
+				vous.set_quiParle(!vous.get_distributeur()); // On redéfinit qui parle en premier
+				adversaire.set_quiParle(!adversaire.get_distributeur());
 				vous.sauver_joueur(maSauvegarde,monfichier);// On met à jour les joueurs
 				adversaire.sauver_joueur(sauvegardeAdv,fichieradv);
 				jeu.sauver_jeu(sauvegardeJeu,"jeu.txt");//On met à jour le jeu
@@ -163,15 +176,13 @@ void main() {
 			system("cls");
 			jeu.set_tour(5); //Pour afficher toutes les cartes
 			jeu.afficher_cartes_tables();
-			cout << endl;
+			cout << endl<<endl;
 			cout << "Vous : "; //On affiche le nom des mains des joueurs
 			vous.afficher_cartes_joueur();
-			cout << endl;
 			jeu.nomCombinaison(rep);
 			cout << endl;
 			cout << "Votre adversaire : ";
 			adversaire.afficher_cartes_joueur();
-			cout << endl;
 			jeu.nomCombinaison(1 - rep);
 			cout << endl;
 			if (jeu.gagnant() == rep) { //Calcul du gagnant et récompense
@@ -226,4 +237,5 @@ void main() {
 		cout << "Votre adversaire l'emporte." << endl;
 	}
 	system("pause");
+	return 0;
 }
