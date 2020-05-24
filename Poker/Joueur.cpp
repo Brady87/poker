@@ -71,7 +71,7 @@ void Joueur::afficher()
 	afficher_cartes_joueur();
 }
 
-void Joueur::sauver_joueur(ofstream& flux)
+void Joueur::sauver_joueur(ofstream& flux,const string &fichier)
 {
 	//Recopie dans le fichier texte
 	/*if (!flux.is_open()) {
@@ -79,6 +79,8 @@ void Joueur::sauver_joueur(ofstream& flux)
 	}
 	else
 	{*/
+		flux.close();
+		flux.open(fichier);
 		flux << id_ << endl; // Ecriture de l'id
 		flux << pseudo_ << endl; // Ecriture du pseudo
 		flux << choix_ << endl; //Ecriture du choix
@@ -99,12 +101,14 @@ void Joueur::sauver_joueur(ofstream& flux)
 	}*/
 }
 
-void Joueur::lire_joueur(ifstream &flux)
+void Joueur::lire_joueur(ifstream &flux,const string &fichier)
 {
 	/*if (!flux.is_open()) {
 		cout << "Erreur d'ouverture" << endl;
 	}
 	else {*/
+	flux.close();
+	flux.open(fichier);
 		int id0, id1;
 		Cartes* main = new Cartes[2];
 		flux >> id_;

@@ -940,14 +940,10 @@ const int Jeu::gagnant()
 	}
 }
 
-void Jeu::sauver_jeu(ofstream &flux)
+void Jeu::sauver_jeu(ofstream &flux,const string &fichier)
 {
-	//Recopie dans le fichier texte
-	if (!flux.is_open()) {
-		cout << "Erreur d'ouverture" << endl;
-	}
-	else
-	{
+		flux.close();
+		flux.open(fichier);
 		flux <<get_manche() << endl; // Ecriture de la manche
 		flux << get_tour() << endl; // Ecriture du tour
 		flux << get_phase() << endl; // Ecriture de la phase
@@ -955,29 +951,23 @@ void Jeu::sauver_jeu(ofstream &flux)
 		for (int i = 0; i < 5; i++) {
 			flux << cartesTable_[i].get_idCarte() << endl; // Ecriture des cartes du jeu
 		}
-					
-		}
-		if (!flux.good()) {
-			cout << "Erreur d'ecriture" << endl;
-		}
-		else {
-			cout << "Sauvegarde effectuee avec succes" << endl;
-		}
 		flux.close();
 	}
-void Jeu::sauver_joueur(const int id,ofstream &flux)
+void Jeu::sauver_joueur(const int id,ofstream &flux,const string &fichier)
 {
 	if (id == 0) {
-		joueurClient_->sauver_joueur(flux);
+		joueurClient_->sauver_joueur(flux,fichier);
 	}
 	if (id == 1) {
-		joueurServeur_->sauver_joueur(flux);
+		joueurServeur_->sauver_joueur(flux,fichier);
 	}
 	
 }
 
-void Jeu::lire_jeu(ifstream &flux)
+void Jeu::lire_jeu(ifstream &flux,const string &fichier)
 {
+	flux.close();
+	flux.open(fichier);
 	int id0 ,id1, id2, id3, id4;
 	flux >> manche_;
 	flux >> tour_;
@@ -996,13 +986,13 @@ void Jeu::lire_jeu(ifstream &flux)
 	flux.close();
 }
 
-void Jeu::lire_joueur(const int id, ifstream& flux)
+void Jeu::lire_joueur(const int id, ifstream& flux,const string &fichier)
 {
 	if (id == 0) {
-		joueurClient_->lire_joueur(flux);
+		joueurClient_->lire_joueur(flux,fichier);
 	}
 	if (id == 1) {
-		joueurServeur_->lire_joueur(flux);
+		joueurServeur_->lire_joueur(flux,fichier);
 	}
 }
 

@@ -41,9 +41,9 @@ class Jeu
 		int* combinaison(const int idJoueur);
 		const void nomCombinaison(const int idJoueur);
 		const int gagnant();
-		void sauver_jeu(ofstream &flux);
-		void sauver_joueur(const int id, ofstream &flux);
-		void lire_jeu(ifstream &flux);
-		void lire_joueur(const int id, ifstream& flux);
+		void sauver_jeu(ofstream &flux, const string &fichier);
+		void sauver_joueur(const int id, ofstream& flux,const string &fichier);
+		void lire_jeu(ifstream &flux, const string &fichier);
+		void lire_joueur(const int id, ifstream& flux,const string &fichier);
 };
 

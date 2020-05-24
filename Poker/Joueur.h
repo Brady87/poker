@@ -39,6 +39,6 @@ class Joueur
 		void affciher_jetons(); //Méthode afficher les jetons du joueur
 		void afficher_choix(); // Affiche le choix effectué;
 		void afficher();//Afficher infos
-		void sauver_joueur(ofstream &flux);
-		void lire_joueur(ifstream& flux);
+		void sauver_joueur(ofstream &flux,const string &fichier);
+		void lire_joueur(ifstream& flux,const string &fichier);
 };
