@@ -38,7 +38,7 @@ const void Jeu::afficher_cartes_tables()
 	else if (tour_ == 2) {//2e tour : on affiche les 3 premières cartes
 		for (int i = 0; i < 3; i++) {
 			cartesTable_[i].afficher_cartes();
-			cout << "  ";
+			cout << " | ";
 		}
 	}
 	else if (tour_ == 3) {// 3e tour : on affiche les 4 premières cartes
@@ -144,35 +144,18 @@ void Jeu::choix(int rep)
 			}
 			cin >> mise;
 			if (vous.get_jetons() < mise) {
-				cout << "Mise supérieure a votre capital." << endl;
-				char ch1;
-				do {//Cas tapis
-					cin >> ch1;
-					cout << "Voulez vous faire tapis ? O/N" << endl;
-					if (ch1 == 'O') {
-						cout << "Vous faites tapis et misez" << vous.get_jetons() << "." << endl;
-						mise = vous.get_jetons();
-						vous.set_jetons(0); // MàJ nbre de jetons
-						vous.set_mise(vous.get_mise() + mise); // MàJ mise
-						set_pot(get_pot() + mise); // On met à jour le pot
-						if (mise + vous.get_mise() < adversaire.get_mise()) {//Si on mise en dessous de la mise de l'adversaire
-							set_pot(get_pot() - (adversaire.get_mise() - mise));// On enlève au pot la mise superflu de l'adversaire
-							adversaire.set_jetons(adversaire.get_jetons()+(adversaire.get_mise()-mise));// On recrédite l'adversaire de la différence des mises
-							adversaire.set_mise(vous.get_mise());// On aligne l'adversaire sur nos mises
-						}
-						valide = true;
-					}
-					else if (ch1 == 'N') {
-					}
-					else {
-						cout << "Choix non valide veuillez répondre par O : oui / N: non" << endl;
-					}
-				} while (!(ch1 == 'O' || ch1 == 'N'));
+				cout << "Mise supérieure a votre capital. Vous ne pouvez miser que " << vous.get_jetons()<<"."<< endl;
 			}
 			else if (mise + vous.get_mise() < adversaire.get_mise() ) {
 				cout << "Mise insuffisante : vous devez miser au moins : " << adversaire.get_mise()- vous.get_mise() << "." << endl;
 			}
 			else {
+				if (adversaire.get_jetons()+adversaire.get_mise()<mise) {
+					cout << "Votre mise excede le capital de l'adversaire." << endl;
+					cout << "Vous misez " << adversaire.get_jetons() << "." << endl;
+					system("pause");
+					mise = adversaire.get_jetons();
+				}
 				vous.set_jetons(vous.get_jetons() - mise); // MàJ nbre de jetons
 				vous.set_mise(vous.get_mise() + mise); // MàJ mise
 				set_pot(get_pot() + mise); // On met à jour le pot
@@ -180,7 +163,7 @@ void Jeu::choix(int rep)
 			break;
 		case 3:
 			if (vous.get_mise()+ vous.get_jetons() < adversaire.get_mise()) {
-				cout << "Vous ne pouvez pas suivre." << endl; //CAS TAPIS A GERER
+				cout << "Vous ne pouvez pas suivre." << endl;
 			}
 			else {
 				vous.set_jetons(vous.get_jetons() - (adversaire.get_mise() - vous.get_mise()));
@@ -192,7 +175,6 @@ void Jeu::choix(int rep)
 			break;
 			case 4:
 				cout <<"Vous vous couchez." <<endl;
-				adversaire.set_jetons(adversaire.get_jetons() + get_pot());
 				valide = true;
 				break;
 			}
