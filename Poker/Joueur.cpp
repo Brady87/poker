@@ -43,22 +43,22 @@ void Joueur::afficher_choix()
 {
 	switch (choix_) {
 	case 0:
-		cout << "n'a pas encore parle" << endl;
+		cout << "n'a pas encore parle." << endl;
 		break;
 	case 1:
-		cout << "a checke" << endl;
+		cout << "a checke." << endl;
 		break;
 	case 2:
-		cout << "a mise" << endl;
+		cout << "a mise." << endl;
 		break;
 	case 3:
-		cout << "a suivi" << endl;
+		cout << "a suivi." << endl;
 		break;
 	case 4:
-		cout << " se couche" << endl;
+		cout << " se couche." << endl;
 		break;
 	default:
-		cout << "a fait n'importe quoi" << endl;
+		cout << "a fait n'importe quoi." << endl;
 		break;
 	}
 }

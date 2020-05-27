@@ -1,8 +1,12 @@
 ﻿#include "Cartes.h"
+#include <string>
 
 
 Cartes::Cartes(const int idCarte) {
 	idCarte_ = idCarte;
+
+	
+
 	//Gestion des couleurs
 	if (idCarte <= 12) {
 		couleur_ = 0; //Coeur
@@ -41,6 +45,8 @@ void Cartes::set_idCarte(const int idCarte)
 
 void Cartes::afficher_cartes()
 {
+
+	
 	//Affichage des symboles
 	if (get_symbole() < 9) { //si le symbole est un nombre
 		cout << get_symbole()+2;
@@ -70,10 +76,10 @@ void Cartes::afficher_cartes()
 	//Affichage des couleurs
 	switch (get_couleur())
 	{
-	case 0:
-		
-		cout <<"Coeur"; //Coeur
+	case 0: {
+		cout << "Coeur"; //Coeur
 		break;
+	}
 	case 1:
 		cout << "Carreau";//Carreau
 		break;

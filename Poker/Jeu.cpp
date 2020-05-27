@@ -44,13 +44,13 @@ const void Jeu::afficher_cartes_tables()
 	else if (tour_ == 3) {// 3e tour : on affiche les 4 premières cartes
 		for (int i = 0; i < 4; i++) {
 			cartesTable_[i].afficher_cartes();
-			cout << "  ";
+			cout << " | ";
 		}
 	}
 	else { //4e et dernier tour : on affiche les 5 cartes
 		for (int i = 0; i < 5; i++) {
 			cartesTable_[i].afficher_cartes();
-			cout << "  ";
+			cout << " | ";
 		}
 	}
 }
@@ -68,23 +68,48 @@ const void Jeu::affichage(int rep)
 	}
 	cout << "Manche : " << manche_ << endl;
 	cout << "Tour : " << tour_ << endl;
-	cout << "------------------------------" << endl;
-	cout << "Vous : ";
+	cout << "----------------------------------------" << endl;
+	cout << "Vous ";
+	if (vous.get_distributeur()) {
+		cout << "(D) : ";
+	}
+	else {
+		cout << ": ";
+	}
 	vous.affciher_jetons();
-	cout << "Votre mise : " << vous.get_mise() << endl;
+	cout << "Votre mise : " << vous.get_mise();
+	if (adversaire.get_mise() == 0) {
+		cout << " jeton." << endl;
+	}
+	else {
+		cout << " jetons." << endl;
+	}
 	cout << endl;
-	cout << "Adversaire : ";
+	cout <<adversaire.get_pseudo();
+	if (adversaire.get_distributeur()) {
+		cout << " (D) : ";
+	}
+	else {
+		cout << ": ";
+	}
 	adversaire.affciher_jetons();
-	cout << "Mise adverse : " << adversaire.get_mise() << " jetons." <<endl;
-	cout << "Votre adversaire ";
+	cout << "Mise adverse : " << adversaire.get_mise();
+	if (adversaire.get_mise() == 0) {
+		cout<< " jeton." << endl;
+	}
+	else {
+		cout << " jetons." << endl;
+	}
+	cout << adversaire.get_pseudo()<<" ";
 	adversaire.afficher_choix();
 	cout << endl;
-	cout << "Pot : " << pot_ << " jetons." << endl;
+	cout << "Pot : " << pot_ << endl;
 	cout << "Votre main : ";
 	vous.afficher_cartes_joueur();
 	cout << "Sur la table : ";
 	afficher_cartes_tables();
-	cout << "------------------------------" << endl;
+	cout << endl;
+	cout << "----------------------------------------" << endl;
 }
 
 void Jeu::set_joueurs(Joueur &joueur)
@@ -144,10 +169,13 @@ void Jeu::choix(int rep)
 			}
 			cin >> mise;
 			if (vous.get_jetons() < mise) {
-				cout << "Mise supérieure a votre capital. Vous ne pouvez miser que " << vous.get_jetons()<<"."<< endl;
+				cout << "Mise superieure a votre capital. Vous ne pouvez miser que " << vous.get_jetons()<<"."<< endl;
 			}
 			else if (mise + vous.get_mise() < adversaire.get_mise() ) {
 				cout << "Mise insuffisante : vous devez miser au moins : " << adversaire.get_mise()- vous.get_mise() << "." << endl;
+			}
+			else if (mise == 0) {
+				cout << "Vous ne pouvez pas miser zero !" << endl;
 			}
 			else {
 				if (adversaire.get_jetons() + adversaire.get_mise()  - vous.get_mise() <mise) {
@@ -163,7 +191,10 @@ void Jeu::choix(int rep)
 				valide = true;
 			break;
 		case 3:
-			if (vous.get_mise()+ vous.get_jetons() < adversaire.get_mise()) {
+			if (adversaire.get_choix() == 0) {
+				cout << "Votre adversaire n'a pas encore parle." << endl;
+			}
+			else if (vous.get_mise()+ vous.get_jetons() < adversaire.get_mise()) {
 				cout << "Vous ne pouvez pas suivre." << endl;
 			}
 			else {

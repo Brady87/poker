@@ -3,7 +3,11 @@
 #include"Jeu.h"
 #include"Joueur.h"
 #include<time.h>
+#include <io.h>
+#include <fcntl.h>
 using namespace std;
+
+
 
 
 
@@ -109,8 +113,6 @@ int main() {
 	}
 	do {//Nouvelle partie
 		do {//Nouvelle manche
-			int petiteMise = 10;
-			int grandeMise = 20;
 			do {//Nouveau tour
 				// On actualise les profils
 				vous.lire_joueur(maLecture,monfichier);
@@ -124,10 +126,11 @@ int main() {
 					jeu.lire_jeu(lectJeu,"jeu.txt");
 					system("cls");
 				}
-				while (!vous.get_quiParle()) {//Ce n'est pas à vous de parler
+				while (!vous.get_quiParle() && adversaire.get_jetons()>0 && vous.get_jetons()>0) {//Ce n'est pas à vous de parler
 					jeu.affichage(rep);
 					cout << "Votre adversaire joue..." << endl;
 					vous.lire_joueur(maLecture,monfichier); // On récupère les infos
+					adversaire.lire_joueur(lectAdv, fichieradv);
 					system("cls");
 				}
 				system("cls");
@@ -135,14 +138,6 @@ int main() {
 				adversaire.lire_joueur(lectAdv,fichieradv);
 				jeu.lire_jeu(lectJeu,"jeu.txt");
 				if (jeu.get_tour() < 5) {
-					if (jeu.get_tour() == 1 && !vous.get_distributeur()) {//Mise de départ géré par le premier a parle
-						vous.set_mise(petiteMise);
-						vous.set_jetons(vous.get_jetons() - petiteMise);
-						adversaire.set_jetons(adversaire.get_jetons() - grandeMise);
-						adversaire.set_mise(grandeMise);
-						jeu.set_pot(petiteMise + grandeMise);
-
-					}
 					jeu.affichage(rep); //Affiche les différentes caractéristiques du jeu en cours
 					if (adversaire.get_choix() == 4 || adversaire.get_choix() == 3 || (adversaire.get_choix() == 1 && vous.get_choix() == 1) || vous.get_jetons()==0 || adversaire.get_jetons()==0) {// Si l'adversaire suit ou que les deux checkent
 					//On ne propose pas de choix
@@ -158,7 +153,7 @@ int main() {
 					adversaire.sauver_joueur(sauvegardeAdv,fichieradv);
 					jeu.sauver_jeu(sauvegardeJeu,"jeu.txt");
 				}
-			} while (!((vous.get_choix() == 1 && adversaire.get_choix() == 1) || (vous.get_mise() == adversaire.get_mise() && (vous.get_choix() != 1 && adversaire.get_mise() != 1) || vous.get_choix() == 4 || adversaire.get_choix() == 4)));// Tant que personne n'est couché et que les mises ne sont pas égales
+			} while (!((vous.get_choix() == 1 && adversaire.get_choix() == 1) || (vous.get_mise() == adversaire.get_mise() && (vous.get_choix() != 1 && adversaire.get_mise() != 1) || vous.get_choix() == 4 || adversaire.get_choix() == 4 || adversaire.get_jetons()<=0 ||vous.get_jetons()<=0)));// Tant que personne n'est couché et que les mises ne sont pas égales
 			jeu.set_tour(jeu.get_tour() + 1);//Tour +1
 				vous.set_mise(0);// On remet à zéro les mises
 				adversaire.set_mise(0);
@@ -236,6 +231,10 @@ int main() {
 	else {
 		cout << "Votre adversaire l'emporte." << endl;
 	}
+	//Effacement des fichiers
+	ofstream efffich1("client.txt");
+	ofstream efffich2("jeu.txt");
+	ofstream efffich3("client.txt");
 	system("pause");
 	return 0;
 }
