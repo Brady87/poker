@@ -1,3 +1,8 @@
+/*
+Développé par Amine ABDOU et Thomas BRARD
+FISE1-A
+*/
+
 #include <iostream>
 #include"Cartes.h"
 #include"Jeu.h"
@@ -126,7 +131,7 @@ int main() {
 					jeu.lire_jeu(lectJeu,"jeu.txt");
 					system("cls");
 				}
-				while (!vous.get_quiParle() && adversaire.get_jetons()>0 && vous.get_jetons()>0) {//Ce n'est pas à vous de parler
+				while (!(vous.get_quiParle() || (adversaire.get_jetons()<=0 && vous.get_choix()!=0) || (vous.get_jetons()<=0 && adversaire.get_choix()!=0) || vous.get_choix()==4||adversaire.get_choix()==4)) {//Ce n'est pas à vous de parler
 					jeu.affichage(rep);
 					cout << "Votre adversaire joue..." << endl;
 					vous.lire_joueur(maLecture,monfichier); // On récupère les infos
@@ -139,7 +144,7 @@ int main() {
 				jeu.lire_jeu(lectJeu,"jeu.txt");
 				if (jeu.get_tour() < 5) {
 					jeu.affichage(rep); //Affiche les différentes caractéristiques du jeu en cours
-					if (adversaire.get_choix() == 4 || adversaire.get_choix() == 3 || (adversaire.get_choix() == 1 && vous.get_choix() == 1) || vous.get_jetons()==0 || adversaire.get_jetons()==0) {// Si l'adversaire suit ou que les deux checkent
+					if (adversaire.get_choix() == 4 || adversaire.get_choix() == 3 || (adversaire.get_choix() == 1 && vous.get_choix() == 1) || (vous.get_jetons()==0 && adversaire.get_choix()!=0) || (adversaire.get_jetons()==0 && vous.get_choix()!=0)) {// Si l'adversaire suit ou que les deux checkent
 					//On ne propose pas de choix
 					}
 					else {
@@ -153,11 +158,11 @@ int main() {
 					adversaire.sauver_joueur(sauvegardeAdv,fichieradv);
 					jeu.sauver_jeu(sauvegardeJeu,"jeu.txt");
 				}
-			} while (!((vous.get_choix() == 1 && adversaire.get_choix() == 1) || (vous.get_mise() == adversaire.get_mise() && (vous.get_choix() != 1 && adversaire.get_mise() != 1) || vous.get_choix() == 4 || adversaire.get_choix() == 4 || adversaire.get_jetons()<=0 ||vous.get_jetons()<=0)));// Tant que personne n'est couché et que les mises ne sont pas égales
+			} while (!((vous.get_choix() == 1 && adversaire.get_choix() == 1) || (vous.get_mise() == adversaire.get_mise() && (vous.get_choix() != 1 && adversaire.get_mise() != 1) || vous.get_choix() == 4 || adversaire.get_choix() == 4 || (adversaire.get_jetons()<=0 && vous.get_choix()!=0) ||(vous.get_jetons()<=0 && adversaire.get_choix()!=0))));// Tant que personne n'est couché et que les mises ne sont pas égales
 			jeu.set_tour(jeu.get_tour() + 1);//Tour +1
 				vous.set_mise(0);// On remet à zéro les mises
 				adversaire.set_mise(0);
-				if (vous.get_choix() != 4 && adversaire.get_choix() != 4) {// Si personne ne s'est couche
+				if (vous.get_choix() != 4 && adversaire.get_choix() != 4 && vous.get_jetons()>0 && adversaire.get_choix()>0) {// Si personne ne s'est couche
 					vous.set_choix(0); //RàZ des choix
 					adversaire.set_choix(0);
 				}
@@ -166,7 +171,7 @@ int main() {
 				vous.sauver_joueur(maSauvegarde,monfichier);// On met à jour les joueurs
 				adversaire.sauver_joueur(sauvegardeAdv,fichieradv);
 				jeu.sauver_jeu(sauvegardeJeu,"jeu.txt");//On met à jour le jeu
-		} while (!(jeu.get_tour() >= 5 || vous.get_choix() == 4 || adversaire.get_choix() == 4||vous.get_jetons()==0||adversaire.get_jetons()==0)); //Tant que personne n'est couché, a sec, et qu'il reste des tours
+		} while (!(jeu.get_tour() >= 5 || vous.get_choix() == 4 || adversaire.get_choix() == 4 || (vous.get_jetons() <= 0 && adversaire.get_choix() != 0) || (adversaire.get_jetons() == 0 && vous.get_choix()!=0))); //Tant que personne n'est couché, a sec, et qu'il reste des tours
 		if (vous.get_choix() != 4 && adversaire.get_choix() != 4) {// Si les deux joueurs jouent encore
 			system("cls");
 			jeu.set_tour(5); //Pour afficher toutes les cartes
