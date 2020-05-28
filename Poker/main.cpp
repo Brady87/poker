@@ -14,8 +14,6 @@ using namespace std;
 
 
 
-
-
 void main() {
 	cout << "                                                                   " << endl;
 	cout << "                                                                   " << endl;
@@ -31,7 +29,7 @@ void main() {
 	cout << "         'MMM.                                 'MMM.    `?MRb.     " << endl;
 	cout << "          ~M!M                                  ~M!M         ~%:   " << endl << endl;
 
-	cout << "------------------------Bienvenue a PokerTSE------------------------" << endl; //Message de bienvenue
+	cout << "------------------------Bienvenue sur PokerTSE------------------------" << endl; //Message de bienvenue
 	string pseudo;
 	int rep = -1;
 	int manche = 1;
@@ -142,6 +140,9 @@ void main() {
 				vous.lire_joueur(maLecture,monfichier); // On rÈcupËre les infos
 				adversaire.lire_joueur(lectAdv,fichieradv);
 				jeu.lire_jeu(lectJeu,"jeu.txt");
+				if ((adversaire.get_jetons() <= 0 && vous.get_choix() != 0 )|| (vous.get_jetons() <= 0 && adversaire.get_choix() <= 0)) {
+					jeu.set_tour(5);
+				}
 				if (jeu.get_tour() < 5) {
 					jeu.affichage(rep); //Affiche les diffÈrentes caractÈristiques du jeu en cours
 					if (adversaire.get_choix() == 4 || adversaire.get_choix() == 3 || (adversaire.get_choix() == 1 && vous.get_choix() == 1) ||(vous.get_mise()==adversaire.get_mise() && ((vous.get_jetons()==0 && adversaire.get_choix()!=0) || (adversaire.get_jetons()==0 && vous.get_choix()!=0)))) {// Si l'adversaire suit ou que les deux checkent
@@ -160,7 +161,7 @@ void main() {
 				}
 			} while (!((vous.get_choix() == 1 && adversaire.get_choix() == 1) || (vous.get_mise() == adversaire.get_mise() && (vous.get_choix() != 1 && adversaire.get_mise() != 1) || vous.get_choix() == 4 || adversaire.get_choix() == 4 || (adversaire.get_mise() == vous.get_mise() &&((adversaire.get_jetons()<=0 && vous.get_choix()!=0) ||(vous.get_jetons()<=0 && adversaire.get_choix()!=0))))));// Tant que personne n'est couchÈ et que les mises ne sont pas Ègales
 			jeu.set_tour(jeu.get_tour() + 1);//Tour +1
-			if (vous.get_choix() != 4 && adversaire.get_choix() != 4 && vous.get_jetons()>0 && adversaire.get_choix()>0) {// Si personne ne s'est couche
+			if (vous.get_choix() != 4 && adversaire.get_choix() != 4 && (vous.get_jetons()>0 && adversaire.get_choix()!=0) && (adversaire.get_choix()>0 && vous.get_choix()!=0)) {// Si personne ne s'est couche
 				vous.set_choix(0); //R‡Z des choix
 				adversaire.set_choix(0);
 				vous.set_mise(0);// On remet ‡ zÈro les mises
@@ -219,6 +220,8 @@ void main() {
 			jeu.nouvelle_donne();//On R‡Z la pioche
 			vous.set_choix(0); //R‡Z les choix
 			adversaire.set_choix(0);
+			vous.set_mise(0);
+			adversaire.set_mise(0);
 			//MÈlange et distribution des cartes
 			jeu.melangerCartes();
 			vous.set_main(jeu.distribuerCartes(2));
@@ -236,9 +239,5 @@ void main() {
 	else {
 		cout << "Votre adversaire l'emporte." << endl;
 	}
-	//Effacement des fichiers
-	ofstream efffich1("client.txt");
-	ofstream efffich2("jeu.txt");
-	ofstream efffich3("client.txt");
 	system("pause");
 }

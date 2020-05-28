@@ -25,9 +25,9 @@ Jeu::Jeu(int manche, int tour, int pot)
 
 Jeu::~Jeu()
 {
-	delete joueurClient_;
-	delete joueurServeur_;
-	delete cartesTable_;
+	remove("jeu.txt");
+	remove("serveur.txt");
+	remove("client.txt");
 }
 
 const void Jeu::afficher_cartes_tables()
@@ -78,7 +78,7 @@ const void Jeu::affichage(int rep)
 	}
 	vous.affciher_jetons();
 	cout << "Votre mise : " << vous.get_mise();
-	if (adversaire.get_mise() == 0) {
+	if (vous.get_mise() == 0) {
 		cout << " jeton." << endl;
 	}
 	else {
@@ -415,8 +415,13 @@ int* Jeu::combinaison(const int idJoueur)
 		while (tabSymbole[12 - i] == 0) {
 			i++;
 		}
+		int j = i+1;
+		while (tabSymbole[12 - j] == 0 && j <= 12) {
+			j++;
+		}
 		idCombinaison = 0;
 		idValeurCombinaison = 12 - i;
+		idValeurCombinaison1 = j;
 		trouve = true;
 	}
 
